@@ -1,10 +1,6 @@
-
-#mcmc_samp2 <- mcmcsamp(lm2, n = 10001)
-#	GIVES THE PERCENTAGE OF MCMC ESTIMATES GREATER THAN 0
-#pval2 <- round(rowMeans(mcmc_samp2@fixef > 0), 4)
-# adjusts pval to be smallest
-#pval2 <- abs(abs(pval2 - 0.5) - 0.5)
-#cbind(data.frame(lm2@fixef), data.frame(pval2))
+# GET OPTIMUM POSITIVE AND NEGATIVE DECAY PARAMETERS FOR EACH SUBJECT, FOR EACH MODEL
+# AFTER RUNNING ONCE, SUBJECTS THAT DID NOT CONVERGE NEED TO HAVE THIER INITIAL
+# DECAY PARAMETERS MANUALLY ADJUSTED
 
 library(RColorBrewer)
 library(zoo)
