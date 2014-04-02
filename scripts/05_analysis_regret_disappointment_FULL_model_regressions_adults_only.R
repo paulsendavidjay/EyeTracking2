@@ -27,13 +27,12 @@ model_list[["Outcome"]] <- as.formula("gamble ~ cv1 + prev_outcome + relief + re
 model_list[["Full"]] <- as.formula("gamble ~ cv1 + prev_outcome + relief + regret + relief_inaction + regret_inaction + sure2_prop.decision + mag1_prop.decision + (1 | subjectID)")
 
 
-
-
+# SUBJECTS THAT SHOULD BE EXCLUDED FOR NONCONVERGENCE
 max_nonconvergent <- list()
 max_nonconvergent[["Gain"]] <- c(60, 61, 66, 509, 512, 516, 530)
 max_nonconvergent[["Loss"]] <- c(55, 66, 67, 512, 521)
 
-
+# STAR MODEL - USE THESE SETTINGS TO GET DATA
 model = 2
 domain = "Gain"
 decay_type = 3
