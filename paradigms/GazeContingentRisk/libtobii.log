@@ -1,0 +1,700 @@
+Last error repeated 3 times
+
+
+Sun Jul 31 15:38:21 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Tue Aug 23 15:12:07 2011
+
+Thread: ?
+Error description: Diod controller failure.
+Error code: 8
+Low level error code: 536871941 (0x20000405)
+Debug info: tet.c: 2410
+
+
+Tue Aug 23 15:19:02 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871170 (0x20000102)
+Debug info: tet.c: 2447
+Last error repeated 2 times
+
+
+Tue Aug 23 15:47:46 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Thu Aug 25 14:09:11 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871170 (0x20000102)
+Debug info: tet.c: 2447
+Last error repeated 2 times
+
+
+Thu Aug 25 14:10:13 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871170 (0x20000102)
+Debug info: tet.c: 2447
+
+
+Thu Aug 25 14:11:36 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871170 (0x20000102)
+Debug info: tet.c: 2447
+
+
+Thu Aug 25 14:12:35 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871170 (0x20000102)
+Debug info: tet.c: 2447
+Last error repeated 2 times
+
+
+Mon Oct 31 17:36:45 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Nov 10 16:48:19 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Nov 10 16:49:38 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Nov 10 16:55:26 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Thu Nov 10 17:23:02 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Sun Nov 27 18:35:37 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Nov 27 18:44:25 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+Last error repeated 2 times
+
+
+Sun Nov 27 19:16:15 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871171 (0x20000103)
+Debug info: tet.c: 2447
+Last error repeated 2 times
+
+
+Sun Nov 27 19:16:28 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Nov 27 19:18:47 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Nov 27 19:21:14 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Nov 27 19:21:48 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Nov 27 19:21:58 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Nov 27 19:26:47 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 2 times
+
+
+Sun Nov 27 20:54:37 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Sun Nov 27 21:52:13 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Wed Nov 30 13:51:28 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Tue Dec  6 13:45:46 2011
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+Last error repeated 2 times
+
+
+Sat Dec 10 11:49:55 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871170 (0x20000102)
+Debug info: tet.c: 2447
+Last error repeated 2 times
+
+
+Sat Dec 10 11:51:30 2011
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Fri Jan 13 19:03:39 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sat Jan 14 11:31:24 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 11 times
+
+
+Sat Jan 14 14:27:46 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sat Jan 14 14:28:39 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sat Jan 14 14:29:11 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sat Jan 14 14:31:23 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 2 times
+
+
+Sun Jan 15 11:35:12 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Jan 15 11:39:03 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Jan 15 11:40:31 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Jan 15 11:44:09 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Jan 15 11:44:16 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Jan 15 11:45:16 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+Last error repeated 5 times
+
+
+Sun Jan 29 13:10:28 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Jan 29 13:11:21 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Thu Feb 23 14:41:57 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Feb 23 14:46:08 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 3 times
+
+
+Sun Feb 26 10:12:04 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 2 times
+
+
+Sun Feb 26 10:22:40 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Feb 26 10:22:47 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Feb 26 10:23:29 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+Last error repeated 2 times
+
+
+Sun Feb 26 13:10:50 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Feb 26 13:12:30 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Sun Feb 26 13:12:54 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+Last error repeated 3 times
+
+
+Thu Mar  1 14:58:54 2012
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Thu Mar  1 15:04:32 2012
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Sun Mar 11 12:42:45 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Sun Mar 18 13:25:06 2012
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+Last error repeated 4 times
+
+
+Tue Mar 20 14:03:14 2012
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Thu Mar 22 12:09:21 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 3 times
+
+
+Thu Mar 22 12:48:56 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Thu Mar 22 12:50:51 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+Last error repeated 2 times
+
+
+Wed Jun 27 09:12:14 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Wed Jun 27 09:15:33 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+Last error repeated 2 times
+
+
+Wed Jun 27 09:30:29 2012
+
+Thread: ?
+Error description: There are not enough data to base a new calibration calculation on.
+Error code: 11
+Low level error code: 536871943 (0x20000407)
+Debug info: tet.c: 2284
+
+
+Thu Jun 28 14:01:14 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Jun 28 14:02:35 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 2 times
+
+
+Fri Jul  6 11:10:45 2012
+
+Thread: ?
+Error description: Internal error, please report to support@tobii.se.
+Error code: 5
+Low level error code: 536871939 (0x20000403)
+Debug info: tet.c: 2410
+Last error repeated 6 times
+
+
+Thu Jul 12 11:23:20 2012
+
+Thread: ?
+Error description: Internal error, please report to support@tobii.se.
+Error code: 5
+Low level error code: 536871939 (0x20000403)
+Debug info: tet.c: 2410
+Last error repeated 3 times
+
+
+Thu Jul 12 12:30:40 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Jul 12 12:30:41 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Thu Jul 12 12:30:53 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Thu Jul 12 12:32:05 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Fri Jul 13 08:55:04 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+Last error repeated 2 times
+
+
+Fri Jul 13 10:33:12 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 2307
+
+
+Tue Jul 31 08:57:18 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673
+
+
+Tue Jul 31 09:28:50 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871171 (0x20000103)
+Debug info: tet.c: 2447
+Last error repeated 2 times
+
+
+Tue Jul 31 09:30:47 2012
+
+Thread: ?
+Error description: Failed to communicate with server. Disconnected.
+Error code: 2
+Low level error code: 536871168 (0x20000100)
+Debug info: tet.c: 673

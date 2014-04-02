@@ -1,0 +1,1 @@
+TimeSec TimeMsec x_coordL y_coordL x_coordR y_coordR x_eyePosL y_eyePosL x_eyePosR y_eyePosR eye_validL eye_validR pup_diamL pup_diamR eye_distL eye_distR

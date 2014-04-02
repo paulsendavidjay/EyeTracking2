@@ -1,0 +1,1 @@
+sec	msec	left_x	left_y	right_x	right_y	left_cam_x	left_cam_y	right_cam_x	right_cam_y	left_valid	right_valid	left_pup_diam	right_pup_diam	left_eye_dist	right_eye_dist	tet_timeStamp

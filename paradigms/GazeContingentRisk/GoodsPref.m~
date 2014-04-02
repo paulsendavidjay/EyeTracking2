@@ -1,0 +1,462 @@
+%   PSYCHTOOLBOX SCRIPT
+%{
+
+Trials are randomized so that each deck will not be offered more than twice in a row,
+and that no more than 2 losses occur in a row
+
+
+%}
+
+
+clear all;
+Screen('Preference', 'SkipSyncTests',1); % keep active for test only
+
+DEBUG = 1;
+
+if strcmp(computer, 'MACI')
+    left_key = 80;
+    right_key = 79;
+    esc_key = 41;
+    q_key = 20;
+    up_key = 82;
+    h_key = 11;
+    return_key = 40;
+else
+    left_key = 37;
+    right_key = 39;
+    esc_key = 81;
+    q_key = 27;
+    up_key = 38;
+    h_key = 72;
+    return_key = 79;
+end
+left_jst = 16;
+right_jst = 32;
+two_jst = 2;
+
+
+
+WaitSecs(0.5); % wait .5 seconds to give time for keyboard to clear
+% CHECK FOR GAMEPAD CONNECTION
+if Gamepad('GetNumGamepads') ~= 1
+    fprintf('\nGamePad not connected\n\nPress Esc to quit and connect GamePad or any other key to continue\n');
+    KbWait;
+    [ keyIsDown, t, keyCode ] = KbCheck;
+    if (find(keyCode) == esc_key); return; end
+    USINGGAMEPAD = 0;
+else
+    gamepadIndex = Gamepad('GetGamepadIndicesFromNames', 'Logitech Dual Action');
+    % while Gamepad('GetButton', gamepadIndex, 2) == 0; end % example
+    USINGGAMEPAD = 1;
+end
+
+
+
+WaitSecs(0.5); % wait .5 seconds to give time for keyboard to clear
+% DETERMINE STATUS OF EYETRACKER (WILL USE MOUSE IF EYETRACKER NOT CONNECTED)
+[status,history] = talk2tobii('GET_STATUS');
+if (status(2) == 0) % Tobii disconnected
+    fprintf('\nEye-tracker not connected\n\nPress Esc to quit and reconnect or any other key to continue\n');
+    KbWait;
+    [ keyIsDown, t, keyCode ] = KbCheck;
+    if (find(keyCode) == esc_key); return; end
+    EYETRACKER = 0;
+else
+    EYETRACKER = 1;
+end
+
+
+if ~ DEBUG
+    HideCursor;
+    fullScreen = [];
+else
+    fullScreen = [0, 0, 800, 600];
+    %fullScreen = [0 0 1680 1050];
+    %fullScreen = [800, 500, 1200, 800];
+end
+
+nrows=1; ncols=2;
+STIM_DIMS_PARAMS_GOODS
+
+
+
+
+
+% INITIALIZE LAST DISPLAY (0 OR 1)
+screenNumber=max(Screen('Screens')); 
+Screen('Preference', 'SkipSyncTests',1); % keep active for test only
+[window, fullScreen] = SCREEN('OpenWindow', screenNumber, [100 100 100], fullScreen, 32);
+XMID = fullScreen(3)-fullScreen(1); YMID = fullScreen(4)-fullScreen(2); white = [255 255 255]; bgd = [50 50 50];
+SCREEN('TextSize', window, 20);
+SCREEN('DrawText', window, 'COLLECTING SCREEN FLIP RATE', floor(.6*XMID), YMID, white, bgd, 1);
+SCREEN('CopyWindow', window, window, fullScreen, fullScreen);
+SCREEN('Flip', window);
+
+grayIndex = GrayIndex(screenNumber);
+ifi = Screen('GetFlipInterval',window,100); % collect frame rate information
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%    ENTER SUBJECT INFO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if ~ DEBUG
+    subjectNumber = input('\n\nenter subject number\n');
+    outputFileName1 = ['logs/', int2str(subjectNumber), '.txt'];
+    while (exist(outputFileName1, 'file') > 0)
+        subjectNumber = input('\nthat subject number already exists\ntry a new number\n');
+        outputFileName1 = ['logs/', int2str(subjectNumber), '.txt'];
+    end
+        
+    %   OPEN OUTPUT FILES
+    fid1 = fopen(outputFileName1, 'w');
+    fprintf(fid1, 'subjectNumber trial ChoiceStim\n');
+
+end
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%    INITIALIZE STIMULUS IMAGE INFO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% DEFINE IMAGE FILES
+% ALL IMAGES GET RESIZED TO STIM_SIZE
+stim_size = round([(fullScreen(3)-fullScreen(1))/4, (fullScreen(3)-fullScreen(1))/4]);
+number_of_pairs = 23;
+for pic = 1:number_of_pairs
+
+    current_pica = ['Pics/ChoicePrefImages/', num2str(pic), 'a.jpg'];
+    current_picb = ['Pics/ChoicePrefImages/', num2str(pic), 'b.jpg'];
+    pPic{pic}{1} = imread(current_pica);
+    pPic{pic}{2} = imread(current_picb);
+    pPic{pic}{1} = imresize(pPic{pic}{1}, stim_size);
+    pPic{pic}{2} = imresize(pPic{pic}{2}, stim_size);
+    
+    %imshow(pPic{pic}{1})
+    %pause(0.5);  % this pause allows Matlab to escape the main thread long enough to plot data
+    %imshow(pPic{pic}{2})
+    %pause(0.5);  % this pause allows Matlab to escape the main thread long enough to plot data
+
+end
+% stim_size is first defined
+[ stim_size, location_coords ] = create_location_coords( nrows, ncols, fullScreen, stim_size, h_margin, v_margin, h_gap, v_gap);
+
+Pos{1} = location_coords(1,:); % LEFT POSITION
+Pos{2} = location_coords(2,:); % RIGHT POSITION
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%    INITIALIZE TRIALS ARRAY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% SET UP ARRAY OF TRIALS SPECIFIED BY TRIAL TYPE
+n_trial_types = 23; % number of trial types
+n_repeats = 1; % number of times to repeat each trial per block
+trials_list = zeros(n_trial_types*n_repeats, 1);
+for trial = 1:n_trial_types
+    for repeat = 1:n_repeats
+        trials_list( (trial-1)*n_repeats + repeat) = trial;
+    end
+end
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%                 BEGIN TRAINING BLOCK LOOP
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% WAIT FOR USER/EXPERIMENTER TO BEGIN PARADIGM
+BlankSCREEN = Screen('OpenOffSCREENwindow', window, bgd, fullScreen);
+Screen('TextSize', BlankSCREEN, 20);
+Screen('DrawText', BlankSCREEN, 'PRESS ANY KEY TO BEGIN', floor(XMID), YMID, white, bgd, 1);
+Screen('CopyWindow', BlankSCREEN, window, fullScreen, fullScreen);
+Screen(window,'Flip');
+pause(1)
+startTime = KbWait;
+[ keyIsDown, t, keyCode ] = KbCheck;
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%                 BEGIN TRIALS LOOP
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% BEGIN EYETRACKER RECORDING
+if( EYETRACKER )
+    talk2tobii('CLEAR_DATA');
+    WaitSecs(0.05);
+    talk2tobii('RECORD');    
+    WaitSecs(0.05);
+    talk2tobii('EVENT','Start', 0);
+end
+
+
+
+for trial = 1:length(trials_list)
+	
+
+	CurrentStim = SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen);
+	
+
+	if round(rand()) == 1
+		LeftImage = pPic{trial}{1};
+		RightImage = pPic{trial}{2};
+	else
+		LeftImage = pPic{trial}{2};
+		RightImage = pPic{trial}{1};
+	end
+	
+	
+	
+	%   PRESENT CHOICE STIMULI
+	Screen('PutImage', CurrentStim, LeftImage , Pos{1});
+	Screen('PutImage', CurrentStim, RightImage, Pos{2});
+	Screen('CopyWindow', CurrentStim, window, fullScreen, fullScreen);
+	stimTime = Screen(window,'Flip');
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%      BEGIN CHOICE SELECTION LOOP
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	while KbCheck; end % Wait until all keys are released.
+	
+    
+    if( EYETRACKER )
+        talk2tobii('EVENT','TrialOnset', trial);
+    end
+
+    
+    
+	confirm = 0;
+	choice = 0; % reinitialize choice
+	while (confirm == 0)
+
+        
+        
+        
+        % -----------------------------------------------------
+        %               EYE/CURSOR POSITION CHECK
+        % -----------------------------------------------------
+              
+        
+        if (EYETRACKER)
+            eyeTrack = talk2tobii('GET_SAMPLE');
+            x = (eyeTrack(1)+eyeTrack(3))*XMAX/2;
+            y = (eyeTrack(2)+eyeTrack(4))*YMAX/2;
+            if (eyeTrack(11) < 4) && (eyeTrack(12) < 4) % don't add to average if eye's are not present
+            
+                xPositions(mod(sample, track_avg_pnts) + 1) = x;
+                yPositions(mod(sample, track_avg_pnts) + 1) = y;
+                sample=sample+1;
+                
+            end
+            %fprintf('%1.2f %1.2f\n', x, y);
+        else
+            [x,y,buttons] = GetMouse(screenNumber);
+            xPositions(mod(sample, track_avg_pnts) + 1) = x;
+            yPositions(mod(sample, track_avg_pnts) + 1) = y;
+            sample=sample+1;
+        end
+        
+
+        
+        % -----------------------------------------------------
+        %               DRAW EYE/CURSOR POSITION
+        % -----------------------------------------------------
+        
+                
+        % plot eye or mouse positions
+        xMean = mean(xPositions);
+        yMean = mean(yPositions);
+        scatter(xMean, yMean,'xb');
+        axis([0 (fullScreen(3)-fullScreen(1)) 0 (fullScreen(4)-fullScreen(2))]);
+        set(gca,'YDir','rev');
+        pause(0.001);  % this pause allows Matlab to escape the main thread long enough to plot data
+        
+        
+        
+        
+        
+        
+		
+		try
+			buttonPress = jst; % sets buttonPress to be the response of joystick (the fifth item is the number from button presses)
+			if (buttonPress(5) == left_jst) %they chose left
+				choice = 1;
+				alternate = 2;
+				
+			elseif (buttonPress(5) == right_jst) %they chose right
+				choice = 2;
+				alternate = 1;
+				
+			elseif (buttonPress(5) == two_jst) %they chose confirm, which is button 2
+				if choice ~= 0
+					confirm = 1;
+				end
+			end
+		end
+		
+		
+        % WAIT AND CLASSIFY RESPONSE
+        try % KEYBOARD ENTRY
+            
+            if keyIsDown
+                
+                %%%%%%%%%%%%%   POSITION 1 Left
+                if (find(keyCode) == left_key)  %they chose left
+                    choice = 1;
+                    alternate = 2;
+                    %%%%%%%%%%%%%   POSITION 2 Right
+                elseif (find(keyCode) == right_key) %they chose right
+                    choice = 2;
+                    alternate = 1;
+                elseif (find(keyCode) == return_key) %they chose Return
+                    if choice ~= 0
+                        confirm = 1;
+                    end
+                elseif (find(keyCode) == esc_key) || (find(keyCode) == q_key) %they chose Esc or q
+                    
+                    % PREPARE TO QUIT PROGRAM
+                    ShowCursor;
+                    clear Screen;
+                    fclose(fid1);
+                    windowPtrs=Screen('Windows');
+                    Screen('Close', windowPtrs);
+                    return
+                    
+                end % if keyCode
+            end % if key_is_down
+        end % try KEYBOARD ENTRY
+		
+        
+        % draw mouse position if no eyetracker
+        if ~ EYETRACKER
+            eye_position = [xMean - 3, yMean - 3, xMean + 3, yMean + 3]; % circle of a 6px diamter
+            SCREEN( 'FillOval', window, green, eye_position);
+        end
+
+        
+        
+		if (confirm == 0) % has not made a choice yet
+			
+			%%%%%%%%%%%%%   POSITION 1 Left
+			if (choice == 1)
+				
+				% REDRAW A NEW BOX FRAME ONTO PREVIOUS WINDOW
+				Screen('CopyWindow', CurrentStim, window, fullScreen, fullScreen);
+				frame_coords = get_frame_coords(Pos{1}, lineWidth);
+				Screen('FrameRect', window, chooseFrameColor, frame_coords, lineWidth);
+				flipTime = Screen(window,'Flip');
+				WaitSecs(.2);
+				
+				%%%%%%%%%%%%%   POSITION 2 Right
+			elseif (choice == 2)
+				
+				% REDRAW A NEW BOX FRAME ONTO PREVIOUS WINDOW
+				Screen('CopyWindow', CurrentStim, window, fullScreen, fullScreen);
+				frame_coords = get_frame_coords(Pos{2}, lineWidth);
+				Screen('FrameRect', window, chooseFrameColor, frame_coords, lineWidth);
+				flipTime = Screen(window,'Flip');
+				WaitSecs(.2);
+				
+			end
+			
+		elseif (confirm == 1) % need to execute decision me
+			
+			
+			%%%%%%%%%%%%%   EXECUTE CHOICE
+			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			
+            % SEND EVENT TO TOBII
+            if ( EYETRACKER )
+                talk2tobii('EVENT','Decision', trial);
+            end
+            
+            
+            
+			% REDRAW A NEW BOX FRAME ONTO PREVIOUS WINDOW
+			Screen('CopyWindow', CurrentStim, window, fullScreen, fullScreen);
+			Screen('FrameRect', window, chosenFrameColor, frame_coords, lineWidth); % frame_coords are carried over from last position
+			confirmTime = Screen(window,'Flip');
+			responseTime = confirmTime - stimTime;
+			WaitSecs(.5);
+			
+				
+			
+			%%%%%%%%%%%% DISPLAY INTERTRIAL INTERVAL
+			blankScreen= SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen);
+			Screen('CopyWindow', blankScreen, window, fullScreen, fullScreen);
+			Screen(window,'Flip');
+			WaitSecs(1 + rand());
+			
+			
+            
+            
+            
+			
+			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%           PRINT TRIAL DATA
+			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            % time_variables: startTime stimTime confirmTime responseTime(real RT)
+            
+			if ~ DEBUG % to avoid (un)commenting this section when subject is not defined
+				fprintf(fid1, '%1d %1d %1d %1.5f %1.5f %1.3f\n', ...
+                    subjectNumber, trial, choice, stimTime, confirmTime, responseTime);
+			end
+			
+		end % confirm == 0 or 1
+		
+	end % while confirm
+		
+end % end trials loop
+	
+	
+
+
+ShowCursor;
+clear SCREEN;
+fclose(fid1);
+windowPtrs=Screen('Windows');
+Screen('Close', windowPtrs);
+    
+    
+    
+    
+    
+    
+    

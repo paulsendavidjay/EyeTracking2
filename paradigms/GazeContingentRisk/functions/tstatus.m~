@@ -1,0 +1,43 @@
+function [ output_args ] = tstatus()
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+
+[status,history] = talk2tobii('GET_STATUS');
+
+for i = 1:15
+    
+    
+    switch i
+        case 1
+            if status(i)
+                fprintf('connection has been requested\n');
+            end
+        case 2
+            if status(i)
+                fprintf('tobii is connected\n')
+            else
+                fprintf('tobii is not connected\n')
+            end
+        case 3
+            if status(i)
+                fprintf('tobii is disconnecting\n')
+            end
+        case 4
+            if status(i)
+                fprintf('tobii is beginning calibration\n')
+            end
+        case 5
+            if status(i)
+                fprintf('tobii is calibrating\n')
+            end
+        case 6
+            if status(i)
+                fprintf('tobii is connected\n')
+            else
+                fprintf('tobii is not connected\n')
+            end
+
+end
+
+end
+

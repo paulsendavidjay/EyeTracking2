@@ -1,0 +1,106 @@
+# COMBINE ALL OUTCOME PUPILOMETRY DATA
+
+library(arm)
+library(mlogit)
+library(MASS)
+library(reshape)
+library(ggplot2)
+library(lme4)
+
+
+study_dir <- c("/Users/Shared/EyeTrackingGaze", 
+	"/Users/dpaulsen/Documents/Academics/Projects/EyeTrackingGaze")
+
+	
+if (file.exists(study_dir[1])) { 
+	study_dir <- study_dir[1] 
+} else if (file.exists(study_dir[2])) { 
+	study_dir <- study_dir[2]
+} else {
+	return('study directory not found')
+}
+
+nsubs <- function(data_frame) {length(levels(as.factor(data_frame$subjectID)))} # function to find number of subjects
+
+source("./subject_lists.R")
+
+
+# INITIALIZE DATA FRAMES
+cmbd_riskData <- data.frame()
+cmbd_outcome_pupil <- vector("list",3) 
+
+cmbd_outcome_pupil_trial_count <- data.frame()
+cmbd_outcome_pupil.norm <- data.frame()
+
+
+
+processed_data_dir <- "/Users/dpaulsen/Documents/Academics/Projects/EyeTrackingGaze/data/processed_data/"
+
+for (subj in all_subjects_w_cntls) {
+	#preprocess(subj)
+ 	fileName <- paste(c(processed_data_dir, "beh_data_", subj, ".R"), collapse="" )
+ 	load(fileName)
+
+ 	fileName <- paste(c(processed_data_dir, "pupil_data_", subj, "_outcome.R"), collapse="" )
+ 	load(fileName)
+
+ 	
+ 	
+ 	# REPLACE BAD VALUES
+	temp <- outcome_pupil[,13:253]
+	temp[temp < 0 | temp > 15] <- NA # replace negative and Inf with NaN
+	outcome_pupil[,13:253] <- temp
+	
+ 	# FILL IN MISSING DATA POINTS
+	for (i in 1:nrow(outcome_pupil)) {
+		outcome_pupil[i,is.na(outcome_pupil[i,])] <- NA 
+		# make sure there are NAs instead of 0's, and that they are not ALL NAs to avoid errors
+		if ( sum(is.na(outcome_pupil[i,13:253])) > 0 & sum(is.na(outcome_pupil[i,13:253])) < 240) { 
+			# the na.approx function operates on columns rather than rows, thus we need to transpose before and after use of na.approx		
+			outcome_pupil[i,13:253] <- t(na.approx(t(outcome_pupil[i,13:253]), maxgap=10, na.rm=FALSE))
+		} 
+	}
+ 	cmbd_outcome_pupil[[1]] <- rbind(cmbd_outcome_pupil[[1]], outcome_pupil) # add to list
+
+
+	# GENERATE NORMALIZED PUPIL DIAMETERS cmbd_outcome_pupil[[2]]
+	temp.norm <- outcome_pupil
+	pup.mean <- mean(as.numeric(as.matrix(temp.norm[,13:253])), na.rm = T) # calculate mean pupil dilation
+	pup.sd <- sd(as.numeric(as.matrix(temp.norm[,13:253])), na.rm = T) # calculate stand. dev. pupil dilation
+	temp.norm[,13:253] <- (temp.norm[,13:253] - pup.mean) / pup.sd  # normalize all pupil dilations
+ 	cmbd_outcome_pupil[[2]] <- rbind(cmbd_outcome_pupil[[2]], temp.norm) # add to list
+
+	#	GENERAL TABLE OF TRIAL COUNTS
+	outcome_pupil.nacount <- aggregate(outcome_pupil[,13:253],
+		by=list(outcome_pupil$eye, outcome_pupil$outcome, outcome_pupil$condition), function(x) { sum(is.na(x))})
+	outcome_pupil.count <- aggregate(outcome_pupil[,13:253], 
+		by=list(outcome_pupil$eye, outcome_pupil$outcome, outcome_pupil$condition), length)
+	outcome_pupil.trialCount <- outcome_pupil.count[,4:ncol(outcome_pupil.count)] - outcome_pupil.nacount[,4:ncol(outcome_pupil.nacount)]
+	outcome_pupil.trialCount <- cbind(outcome_pupil$subjectID[1], outcome_pupil.count[,1:3], outcome_pupil.trialCount)
+	names(outcome_pupil.trialCount)[1:4] <- c("subjectID","eye", "outcome", "condition")
+	cmbd_outcome_pupil[[3]] <- rbind(cmbd_outcome_pupil[[3]], outcome_pupil.trialCount) # add to list
+
+
+ 	
+ }
+
+# CHANGE NUMERIC TO FACTORS, LABEL GROUPS
+# ADD AGE GROUP TO PUPIL DATA
+for (i in 1:3) { 
+	cmbd_outcome_pupil[[i]][,'AgeGroup'] <- "adult"
+	cmbd_outcome_pupil[[i]][(cmbd_outcome_pupil[[i]][,"subjectID"] > 89),'AgeGroup'] <- "control"
+	cmbd_outcome_pupil[[i]][(cmbd_outcome_pupil[[i]][,"subjectID"] > 100),'AgeGroup'] <- "child"
+	cmbd_outcome_pupil[[i]][,"AgeGroup"] <- as.factor(cmbd_outcome_pupil[[i]][,"AgeGroup"])
+	cmbd_outcome_pupil[[i]][,"condition"] <- as.factor(cmbd_outcome_pupil[[i]][,"condition"])
+}
+
+cmbd_outcome_pupil_file_name <- paste(c(study_dir, "/data/processed_data/pupil_data_cmbd_outcome_pupil.R"), collapse="")
+unlink(cmbd_outcome_pupil_file_name)
+save(cmbd_outcome_pupil, file= cmbd_outcome_pupil_file_name)
+
+
+
+
+
+
+

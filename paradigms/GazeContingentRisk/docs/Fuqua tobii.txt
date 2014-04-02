@@ -1,0 +1,23 @@
+/Users/dpaulsen: ping XL060-01500128.local
+PING xl060-01500128.local (169.254.7.31): 56 data bytes
+64 bytes from 169.254.7.31: icmp_seq=0 ttl=64 time=1.241 ms
+64 bytes from 169.254.7.31: icmp_seq=1 ttl=64 time=0.747 ms
+64 bytes from 169.254.7.31: icmp_seq=2 ttl=64 time=0.757 ms
+64 bytes from 169.254.7.31: icmp_seq=3 ttl=64 time=0.755 ms
+64 bytes from 169.254.7.31: icmp_seq=4 ttl=64 time=0.750 ms
+64 bytes from 169.254.7.31: icmp_seq=5 ttl=64 time=0.676 ms
+64 bytes from 169.254.7.31: icmp_seq=6 ttl=64 time=0.750 ms
+64 bytes from 169.254.7.31: icmp_seq=7 ttl=64 time=0.754 ms
+64 bytes from 169.254.7.31: icmp_seq=8 ttl=64 time=0.745 ms
+
+
+
+
+IP ADDRESS: 
+169.254.7.31
+
+RESOLUTION:
+1920 x 1200
+
+
+

@@ -1,0 +1,97 @@
+function [ stim_size, x1, y1, x2, y2 ] = create_location_coords( nrows, ncols, window_dim, stim_dim, h_margin, v_margin, h_gap, v_gap)
+%create_location_coords returns an nrows*ncols array of coordinates for PTB
+%and a new stimulize size proportional to the dimensions submitted
+%stiimulus locations
+%{
+    nrows = how many rows
+    ncols = how many columns
+    window_dim = pixel dimension of window
+    stim_dim = pixel dimension of stimulus % [height, width]
+    h_margin, v_margin = horizontal, vertical margins in percent of screen dim: range(0.0 - 0.25)
+    h_gap, v_gap = horizontal, vertical gaps in pixels
+
+
+    NOTE: need to work on using gap values that are relative to screen dimensions rather than pixel sizes
+%}
+
+stimulus_ht = stim_dim(1);
+stimulus_wd = stim_dim(2);
+h_margin_width = h_margin*( window_dim(3) - window_dim(1))
+v_margin_width = v_margin*( window_dim(4) - window_dim(2))
+x1_ = zeros(ncols);
+x2_ = zeros(ncols);
+y1_ = zeros(nrows);
+y2_ = zeros(nrows);
+
+
+% the window boundary in which to display stimuli
+stimulus_window_dim = [window_dim(1) + h_margin_width, ...
+    window_dim(2) + v_margin_width, ...
+    window_dim(3) - h_margin_width, ...
+    window_dim(4) - v_margin_width]
+
+total_stimulus_width = nrows*stimulus_wd + (ncols-1)*h_gap
+total_stimulus_height = nrows*stimulus_ht + (nrows-1)*v_gap
+
+
+% if initial sizes/parameters cannot be used, need to iterate dimensions
+% until they fit
+while ( total_stimulus_width > (stimulus_window_dim(3) - stimulus_window_dim(1)) ) || ...
+        ( total_stimulus_height > (stimulus_window_dim(4) - stimulus_window_dim(2)) )
+    
+    stimulus_wd = 0.9*stimulus_wd;
+    stimulus_ht = 0.9*stimulus_ht;
+    total_stimulus_width = nrows*stimulus_ht + (ncols-1)*h_gap;
+    total_stimulus_height = nrows*stimulus_ht + (nrows-1)*v_gap;
+    
+end
+
+
+
+% determine offset for centering stimuli display, priority will be given to gap
+% specifications
+stim_width_offset = (stimulus_window_dim(3) - stimulus_window_dim(1)) - total_stimulus_width;
+stim_height_offset = (stimulus_window_dim(4) - stimulus_window_dim(2)) - total_stimulus_height;
+
+
+
+x_start = stimulus_window_dim(1) + stim_width_offset;
+for x = 1:ncols
+    x1_(x) = x_start;
+    x2_(x) = x_start + stimulus_wd;
+    x_start = x2_(x) + h_gap;
+end
+
+y_start = stimulus_window_dim(2) + stim_height_offset;
+for y = 1:nrows
+    y1_(y) = y_start;
+    y2_(y) = y_start + stimulus_ht;
+    y_start = y2_(x) + v_gap;
+end
+
+stim_position = 1;
+for y = 1:nrows
+    for x = 1:ncols
+        x1(stim_position) = x1_(x);
+        x2(stim_position) = x2_(x);
+        y1(stim_position) = y1_(y);
+        y2(stim_position) = y2_(y);
+        stim_position = stim_position + 1;
+    end
+end
+
+stim_size = [stimulus_ht, stimulus_wd];
+
+return
+
+
+
+end
+
+
+
+
+
+
+
+
