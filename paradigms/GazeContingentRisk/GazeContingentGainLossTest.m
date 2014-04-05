@@ -82,7 +82,6 @@ if strcmp(computer, 'MACI')
     d_key = 7; % draw eyes or display eyes
     space_key = 44;
     
-    
     left_jst = 5;
     right_jst = 6;
     two_jst = 2;
@@ -183,12 +182,9 @@ grayIndex = GrayIndex(screenNumber);
 ifi = Screen('GetFlipInterval',window,100); % collect frame rate information
 
 
-
 %	INITIALIZE AUDIO
 InitializePsychSound(0); % initialize sound driver; (0) means ms timing is not crucial, (1) if it is
 PsychPortAudio initialized. Will use CoreAudio for audio.
-
-
 
 
 %   LOAD TRIAL PARAMETERS
