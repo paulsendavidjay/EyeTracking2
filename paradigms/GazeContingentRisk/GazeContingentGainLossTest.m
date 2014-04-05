@@ -10,35 +10,35 @@ NEED TO DO:
     
 
 The all of the files required for this script are enclosed in the subdirectories of the parent directory.
-	STIM_DIMS_PARAMS_RISK contains general settings: colors, frame coordinates, audio files, coin images, etc.
-	
-	trials_list... files supply the input for each trial, including gamble and sure bet values, probability of winning a gamble,
-	and the trial type.
-		trialType: 1 - sure bet vs. sure bet (sure1 vs sure2)
-		trialTypes: 2-5 - sure bet vs. gamble (sure2 vs mag1 | mag2) note: mag1 value should be larger than mag2 for outcome colors to be consistent
-		
+    STIM_DIMS_PARAMS_RISK contains general settings: colors, frame coordinates, audio files, coin images, etc.
+    
+    trials_list... files supply the input for each trial, including gamble and sure bet values, probability of winning a gamble,
+    and the trial type.
+        trialType: 1 - sure bet vs. sure bet (sure1 vs sure2)
+        trialTypes: 2-5 - sure bet vs. gamble (sure2 vs mag1 | mag2) note: mag1 value should be larger than mag2 for outcome colors to be consistent
+        
         trialType: 6 - gamble vs. gamble (sure1 | sure2 vs mag1 | mag2) - mag1-2 EV > sure1-2 EV
         
         trialType: - - gamble vs. gamble (sure1 | sure2 vs mag1 | mag2) - equal EV
-		trialType: - - not implemented any longer, but was for training up on pairing images to probabilities through forced choice (gamble)
-		vert: 1 = gamble on top, 0 = gamble on bottom
-		topRight: 1 = right arrow is on top, 0 = right arrow is on bottom
-		RtLt: 1 - larger mag is on left side, 0 - larger mag is on right side
-		
-		ISI: ISI1 - value in seconds added a standard 1 second delay between confirmation and presentation of outcome
-		ITI: (becomes ISI2 in script) - delay between outcome and start of next trial
-		
-		the images columns should contain the value 5 consistently. This has to do with the probabilistic learning task no longer implemented. Could be changed,
-		but the task could possibly be reinstated, so we're holding off on deleting.
-		
-		
-		key presses:
-			return: decision made -> arrow screen
-			right & left arrows: selection of choice option
-			return: confirmation -> delay -> outcome
-			q or esc: quit, close open files, clear screen
-			h: escape winnings display
-		
+        trialType: - - not implemented any longer, but was for training up on pairing images to probabilities through forced choice (gamble)
+        vert: 1 = gamble on top, 0 = gamble on bottom
+        topRight: 1 = right arrow is on top, 0 = right arrow is on bottom
+        RtLt: 1 - larger mag is on left side, 0 - larger mag is on right side
+        
+        ISI: ISI1 - value in seconds added a standard 1 second delay between confirmation and presentation of outcome
+        ITI: (becomes ISI2 in script) - delay between outcome and start of next trial
+        
+        the images columns should contain the value 5 consistently. This has to do with the probabilistic learning task no longer implemented. Could be changed,
+        but the task could possibly be reinstated, so we're holding off on deleting.
+        
+        
+        key presses:
+            return: decision made -> arrow screen
+            right & left arrows: selection of choice option
+            return: confirmation -> delay -> outcome
+            q or esc: quit, close open files, clear screen
+            h: escape winnings display
+        
     Eye tracking:
         It is expected that when eyetracking the 'START_TRACKING' function has begun. The first call to the tracker will be 'RECORD'
 
@@ -184,7 +184,7 @@ ifi = Screen('GetFlipInterval',window,100); % collect frame rate information
 
 
 
-%	INITIALIZE AUDIO
+%    INITIALIZE AUDIO
 InitializePsychSound(0); % initialize sound driver; (0) means ms timing is not crucial, (1) if it is
 PsychPortAudio initialized. Will use CoreAudio for audio.
 
@@ -212,8 +212,8 @@ STIM_DIMS_PARAMS_RISK;
 
 % DO NOT ENTER SUBJECT INFORMATION FOR OUTPUT FILES IF ONLY DEBUGGING
 if (~ DEBUG )
-	
-	%HideCursor;
+    
+    %HideCursor;
     
     if ( ~ exist('subjectNumber', 'var') )
         subjectNumber = input('\n\nenter subject number\n');
@@ -303,25 +303,25 @@ end
 % ================================================================
 
 if( EYETRACKER )
-	
-	% tracking off
-	DRAW_EYES; % tracking on
-	% tracking off
+    
+    % tracking off
+    DRAW_EYES; % tracking on
+    % tracking off
     WaitSecs(0.5);
-	% PRESENT STARTING SCREEN
-	BlankSCREEN = SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen);
-	SCREEN('TextSize', BlankSCREEN, 20);
-	SCREEN('DrawText', BlankSCREEN, 'PRESS ANY KEY TO CALIBRATE', floor(.6*XMID), YMID, white, bgd, 1);
-	SCREEN('CopyWindow', BlankSCREEN, window, fullScreen, fullScreen);
-	SCREEN('Flip', window);
-	
-	% WAIT FOR KEY PRESS
-	startTime = KbWait;
-	[ keyIsDown, t, keyCode ] = KbCheck;
+    % PRESENT STARTING SCREEN
+    BlankSCREEN = SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen);
+    SCREEN('TextSize', BlankSCREEN, 20);
+    SCREEN('DrawText', BlankSCREEN, 'PRESS ANY KEY TO CALIBRATE', floor(.6*XMID), YMID, white, bgd, 1);
+    SCREEN('CopyWindow', BlankSCREEN, window, fullScreen, fullScreen);
+    SCREEN('Flip', window);
+    
+    % WAIT FOR KEY PRESS
+    startTime = KbWait;
+    [ keyIsDown, t, keyCode ] = KbCheck;
 
-	% requires tracking off
-	CALIBRATE; % loops until calibration is satisfactory
-	
+    % requires tracking off
+    CALIBRATE; % loops until calibration is satisfactory
+    
     talk2tobii('START_TRACKING');
     WaitSecs(0.05);
     talk2tobii('CLEAR_DATA');
@@ -394,15 +394,14 @@ while trial <= nrows;
     
     if DEBUG
 
-		% CLOSE ALL OPEN TEXTURES AND OFF-SCREEN WINDOWS
+        % CLOSE ALL OPEN TEXTURES AND OFF-SCREEN WINDOWS
         windowPtrs=Screen('Windows');
         if length(windowPtrs) > 1
             for openWindowPtr = windowPtrs(length(windowPtrs)):-1:windowPtrs(2)
                 Screen('Close', openWindowPtr);
             end
         end
-        
-    end
+    end % if DEBUG
     
     recently_paused = 0; % clear paused flag
     
@@ -465,7 +464,7 @@ while trial <= nrows;
     %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	% STIMULUS SCREENS
+    % STIMULUS SCREENS
     BlankSCREEN = SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen);
     BlackScreen = SCREEN('OpenOffSCREENwindow', window, [0 0 0], fullScreen);
     FixStim = SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen); % show first
@@ -735,9 +734,9 @@ while trial <= nrows;
         DrawEightCoin_50;
         tex4 = SCREEN( 'MakeTexture', window, currentImage );
         
- 		%{
-		% NOT GOING TO DRAW PROBABILITY IMAGES
- 		pImageA = pPic{P1Image};
+         %{
+        % NOT GOING TO DRAW PROBABILITY IMAGES
+         pImageA = pPic{P1Image};
         tex_pImageA = SCREEN( 'MakeTexture', window, pImageA );
         
         pImageB = pPic{P2Image};
@@ -755,7 +754,7 @@ while trial <= nrows;
         % BB
         SCREEN('FrameRect', CurrentStim, frameColor, gambleFrame{vertB}{B}, lineWidth);
 
-		%{
+        %{
         % pImageA
         SCREEN('FrameRect', CurrentStim, pImageColor, PimageLoc{vertA}, lineWidth);
         % pImageB
@@ -771,9 +770,9 @@ while trial <= nrows;
         SCREEN( 'DrawTexture', CurrentStim, tex1, [], gamble{vertA}{a});
         % Ab
         SCREEN( 'DrawTexture', CurrentStim, tex2, [], gamble{vertA}{b});
-		% BA
+        % BA
         SCREEN( 'DrawTexture', CurrentStim, tex3, [], gamble{vertB}{A});
-		% BB
+        % BB
         SCREEN( 'DrawTexture', CurrentStim, tex4, [], gamble{vertB}{B})
         % SCREEN( 'DrawTexture', CurrentStim, tex_pImageA, [], PimageLoc{vertA});
         % SCREEN( 'DrawTexture', CurrentStim, tex_pImageB, [], PimageLoc{vertB});
@@ -910,17 +909,17 @@ while trial <= nrows;
     
     % wait for eyes to be centered at fixation
     sample = 0; xPositions = XMID*ones(track_avg_pnts,1); yPositions = YMID*ones(track_avg_pnts,1);
-	eyes_centered = 0;
-	while (eyes_centered == 0)
-	
+    eyes_centered = 0;
+    while (eyes_centered == 0)
+    
         WaitSecs(.005); % wait 5 ms to keep processors from overloading
 
         
-		if (EYETRACKER)
-			eyeTrack = talk2tobii('GET_SAMPLE');
-			x = (eyeTrack(1)+eyeTrack(3))*XMAX/2;
-			y = (eyeTrack(2)+eyeTrack(4))*YMAX/2;
-			
+        if (EYETRACKER)
+            eyeTrack = talk2tobii('GET_SAMPLE');
+            x = (eyeTrack(1)+eyeTrack(3))*XMAX/2;
+            y = (eyeTrack(2)+eyeTrack(4))*YMAX/2;
+            
             
             try
                 [keyIsDown, secs, keyCode] = KbCheck;
@@ -1005,20 +1004,20 @@ while trial <= nrows;
             
             
             if (eyeTrack(11) < 4) && (eyeTrack(12) < 4) % don't add to average if eye's are not present
-			
-				xPositions(mod(sample, track_avg_pnts) + 1) = x;
-				yPositions(mod(sample, track_avg_pnts) + 1) = y;
-				sample=sample+1;
-				
-			end
-			%fprintf('%1.2f %1.2f\n', x, y);
-		else
-			[x,y,buttons] = GetMouse(1);
-			xPositions(mod(sample, track_avg_pnts) + 1) = x;
-			yPositions(mod(sample, track_avg_pnts) + 1) = y;
-			sample=sample+1;
+            
+                xPositions(mod(sample, track_avg_pnts) + 1) = x;
+                yPositions(mod(sample, track_avg_pnts) + 1) = y;
+                sample=sample+1;
+                
+            end
+            %fprintf('%1.2f %1.2f\n', x, y);
+        else
+            [x,y,buttons] = GetMouse(1);
+            xPositions(mod(sample, track_avg_pnts) + 1) = x;
+            yPositions(mod(sample, track_avg_pnts) + 1) = y;
+            sample=sample+1;
         end    
-		
+        
         xMean = mean(xPositions);
         yMean = mean(yPositions);
 
@@ -1041,10 +1040,10 @@ while trial <= nrows;
         
         
         EyeFixPosition = fixPosition + add_to_fix_pos*[-1 -1 1 1];
-		if ( IsBounded(xMean, yMean, EyeFixPosition) )
-			eyes_centered = 1;
-		end
-	
+        if ( IsBounded(xMean, yMean, EyeFixPosition) )
+            eyes_centered = 1;
+        end
+    
     end
     
     
@@ -1233,7 +1232,7 @@ while trial <= nrows;
           
         elseif (trialType >= 6)
         
-			% A b
+            % A b
             if ( IsBounded(xMean, yMean, gambleFrame{vertA}{a}) )
                 
                 SCREEN( 'DrawTexture', alternatives_window, tex1, [], gamble{vertA}{a});
@@ -1427,14 +1426,14 @@ while trial <= nrows;
     
     % wait for eyes to be centered at fixation again
     sample = 0; xPositions = XMID*ones(track_avg_pnts,1); yPositions = YMID*ones(track_avg_pnts,1);
-	eyes_centered = 0;
-	while (eyes_centered == 0)
-	
-		if (EYETRACKER)
-			eyeTrack = talk2tobii('GET_SAMPLE');
-			x = (eyeTrack(1)+eyeTrack(3))*XMAX/2;
-			y = (eyeTrack(2)+eyeTrack(4))*YMAX/2;
-			
+    eyes_centered = 0;
+    while (eyes_centered == 0)
+    
+        if (EYETRACKER)
+            eyeTrack = talk2tobii('GET_SAMPLE');
+            x = (eyeTrack(1)+eyeTrack(3))*XMAX/2;
+            y = (eyeTrack(2)+eyeTrack(4))*YMAX/2;
+            
             
             try
                 [keyIsDown, secs, keyCode] = KbCheck;
@@ -1518,20 +1517,20 @@ while trial <= nrows;
             
             
             if (eyeTrack(11) < 4) && (eyeTrack(12) < 4) % don't add to average if eye's are not present
-			
-				xPositions(mod(sample, track_avg_pnts) + 1) = x;
-				yPositions(mod(sample, track_avg_pnts) + 1) = y;
-				sample=sample+1;
-				
-			end
-			%fprintf('%1.2f %1.2f\n', x, y);
-		else
-			[x,y,buttons] = GetMouse(1);
-			xPositions(mod(sample, track_avg_pnts) + 1) = x;
-			yPositions(mod(sample, track_avg_pnts) + 1) = y;
-			sample=sample+1;
+            
+                xPositions(mod(sample, track_avg_pnts) + 1) = x;
+                yPositions(mod(sample, track_avg_pnts) + 1) = y;
+                sample=sample+1;
+                
+            end
+            %fprintf('%1.2f %1.2f\n', x, y);
+        else
+            [x,y,buttons] = GetMouse(1);
+            xPositions(mod(sample, track_avg_pnts) + 1) = x;
+            yPositions(mod(sample, track_avg_pnts) + 1) = y;
+            sample=sample+1;
         end    
-		
+        
         xMean = mean(xPositions);
         yMean = mean(yPositions);
 
@@ -1554,10 +1553,10 @@ while trial <= nrows;
         
         
         EyeFixPosition = fixPosition + add_to_fix_pos*[-1 -1 1 1];
-		if ( IsBounded(xMean, yMean, EyeFixPosition) )
-			eyes_centered = 1;
-		end
-	
+        if ( IsBounded(xMean, yMean, EyeFixPosition) )
+            eyes_centered = 1;
+        end
+    
     end
     %}
     
@@ -1844,7 +1843,7 @@ while trial <= nrows;
     
     
     
-	if EYETRACKER
+    if EYETRACKER
         talk2tobii('EVENT','ChoiceOff', trial);
     end
     
@@ -1993,7 +1992,7 @@ while trial <= nrows;
      
     
     flipTime = SCREEN('Flip', window);
-	outcomeTime = flipTime-startTime; % start of the outcome display
+    outcomeTime = flipTime-startTime; % start of the outcome display
 
     
     
@@ -2098,7 +2097,7 @@ while trial <= nrows;
     
     
     
-	total_winnings = total_winnings + valence*coinsWon;
+    total_winnings = total_winnings + valence*coinsWon;
 
     
     % gamb
