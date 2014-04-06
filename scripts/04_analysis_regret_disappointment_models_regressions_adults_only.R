@@ -7,17 +7,21 @@ source("~/R-stuff/functions/summarySE.R")
 setwd("~/Documents/Academics/Projects/EyeTrackingGaze2/scripts/")
 
 
-model = 2
-domain = "Gain"
-decay_type = 2
-
-
-ggplotColours <- function(n=6, h=c(0, 360) +15){
-  if ((diff(h)%%360) < 1) h[2] <- h[2] - 360/n
-  hcl(h = (seq(h[1], h[2], length = n)), c = 100, l = 65)
-}
+# model = 2
+# domain = "Gain"
+# decay_type = 2
 
 cols = brewer.pal(6,"Set2")
+
+# SET TEXT SIZING FOR ALL PLOTS
+text_sizing <- 	theme(axis.text.x = element_text(size=6),
+		axis.text.y = element_text(size=6),
+		axis.title.x = element_text(size=8),
+		axis.title.y = element_text(size=8),
+		legend.text = element_text(size=8),
+		legend.title = element_text(size=8),
+		strip.text.x = element_text(size=9),
+		title = element_text(size=12)) 
 
 
 ##############################################################################
@@ -51,17 +55,16 @@ for (domain in c("Gain","Loss")) {
 sink()
 
 
+
+
 ##############################################################################
 ##############################################################################
-#								COLLECTING STATISTICS
+#								COLLECT STATISTICS
 
 
 model_list <- list()
-
 model_list[[1]] <- as.formula("gamble ~ cv1 + prev_outcome + relief + regret + (1 | subjectID)")
-
 model_list[[2]] <- as.formula("gamble ~ cv1 + prev_outcome + relief + regret + relief_inaction + regret_inaction + (1 | subjectID)")
-
 model_list[[3]] <- as.formula("gamble ~ cv1 + prev_outcome + relief + regret + relief_inaction + regret_inaction + disappointment + elation + (1 | subjectID)")
 
 max_nonconvergent <- list()
@@ -87,9 +90,9 @@ for (domain in c("Gain","Loss")) {
 	
 	current_convergence <- summarySE(current_model_df, measurevar="convergence", groupvars="subjectID")$convergence
 		
-		
 	current_model_df$prev_outcome <- factor(current_model_df$prev_outcome)
 	
+	# RUN FOR ALL SUBJECTS
 	current_glm <- glmer(model_list[[model]], data=current_model_df, family=binomial("logit"))
 	current_z <- data.frame(t(summary(current_glm)@coefs[,3]))
 	current_df <- data.frame(model=model, decay_type=decay_type, 
@@ -98,7 +101,7 @@ for (domain in c("Gain","Loss")) {
 	current_df <- cbind(current_df , current_z)
 	aic_z_df <- rbind.fill(aic_z_df, current_df)
 
-	
+	# RUN FOR SUBJECTS WITH SUCCESSFUL CONVERGENCE
 	current_glm <- glmer(model_list[[model]], data=current_model_df, subset=convergence==0, family=binomial("logit"))
 	exclude_list <- max_nonconvergent[[domain]]
 	# TO COMPARE AICs WE NEED AN EQUAL NUMBER OF DATA POINTS - THIS EXCLUDES MAX NUM SUBJECTS FOR MODEL 3, DECAY 3, BY DOMAIN
@@ -110,9 +113,10 @@ for (domain in c("Gain","Loss")) {
 		domain=domain,AIC=summary(current_glm)@AICtab[1], AIC_max_non=AIC_max_non, nonconvergent=sum(current_convergence > 0),
 		n_param=length(current_z))
 	current_df <- cbind(current_df , current_z)
+	
+	# COMBINE RESULTS
 	aic_z_excld_nonconverg_df <- rbind.fill(aic_z_excld_nonconverg_df, current_df)
-	
-	
+
 
 } # for domain
 } # for decay_type
@@ -123,25 +127,14 @@ save(aic_z_df, aic_z_excld_nonconverg_df,  file=out_file_data_name) # current_mo
 
 
 
-
-
-
-
-
-
-
-
-
-
 ##############################################################################
 ##############################################################################
 #								PLOTTING RESULTS
 
 
-
-
 out_file_data_name <- "../analysis/_analysis_emot/emotion_model_comparisons_AIC_z_adults_only.R"
 load(out_file_data_name)
+
 aic_z_df$decay_type <- factor(aic_z_df$decay_type)
 aic_z_df$model <- factor(aic_z_df$model)
 aic_z_excld_nonconverg_df$decay_type <- factor(aic_z_excld_nonconverg_df$decay_type)
@@ -162,22 +155,6 @@ aic_z_excld_nonconverg_df$AIC_adjusted_excld[aic_z_excld_nonconverg_df$decay_typ
 	aic_z_excld_nonconverg_df$AIC_adjusted_excld[aic_z_excld_nonconverg_df$decay_type == 3] + 1
 
 
-# COMPARISON OF RAW AIC BETWEEN MODELS, NOT ACCOUNTING FOR NUMBER OF OBSERVATIONS - UNFAIR COMPARISONS
-if (F) {
-# COMPARE ADJUSTED AICS FOR NONEXCLUSIONARY MODEL
-dev.new(height=4,width=4)
-ggplot(aic_z_df, aes(x=as.numeric(model), y= AIC_adjusted)) +
-	geom_bar(stat="identity", aes(fill= decay_type), position="dodge") +
-	facet_wrap( ~ domain, ncol=1)
-
-# COMPARE ADJUSTED AICS FOR EXCLUSIONARY MODELS - ONLY MODEL/DECAY/DOMAIN SPECIFIC SUBJECTS EXCLUDED
-dev.new(height=4,width=4)
-ggplot(aic_z_excld_nonconverg_df, aes(x=as.numeric(model), y= AIC_adjusted)) +
-	geom_bar(stat="identity", aes(fill= decay_type), position="dodge") +
-	facet_wrap( ~ domain, ncol=1)
-}
-
-
 # COMPARE ADJUSTED AICS FOR EXCLUSIONARY MODELS - MAX MODEL/DECAY/DOMAIN SPECIFIC SUBJECTS EXCLUDED
 #dev.new(height=4,width=4)
 pdf("~/Documents/Academics/Projects/EyeTrackingGaze2/analysis/_analysis_emot/emotion_AIC_model_comparisons_adult.pdf",height=4, width=7)
@@ -190,17 +167,10 @@ ggplot(aic_z_excld_nonconverg_df, aes(x=model, y= AIC_adjusted_excld)) +
 	scale_fill_manual(values=cols[1:4], breaks=c("0","1","2","3"), labels=c("0","1","2","4"))
 dev.off()
 
-
-
-
-
-
-#uninteresting_vars <- c("nonconvergent","AIC", "AIC_adjusted","AIC.1","AIC_adjusted_excld", "X.Intercept.", "cv1", "prev_outcome1", "prev_outcome2", "n_param")
-
+# IDENTIFY VARIABLES OF DISINTEREST FOR EXCLUSION DURING PLOTTING
 uninteresting_vars <- c("nonconvergent","AIC", "AIC_adjusted","AIC.1","AIC_adjusted_excld", "X.Intercept.", "n_param", "cv")
 
-
-
+# MAKE LIST OF VARIABLES ORDERED TO GET PLOTS IN THE RIGHT ORDER
 aic_ordered_vars <- rev(c("regret","relief","regret_inaction","relief_inaction","disappointment",
 	"elation","cv1","prev_outcome1", "prev_outcome2","X.Intercept.","AIC","AIC_adjusted","nonconvergent", "n_param"))
 
@@ -210,33 +180,18 @@ aic_excld_ordered_vars <- rev(c("regret","relief","regret_inaction","relief_inac
 aic_excld_ordered_vars_labels <- rev(c("regret","relief","regret_inaction","relief_inaction","disappointment",
 	"elation","cv","prev. outcome (sure bet)", "prev. outcome\n(Gain: Win, Loss: Lose)","X.Intercept.","AIC","AIC.1","AIC_adjusted","AIC_adjusted_excld","nonconvergent", "n_param"))
 
-
-
-
+# PLACE DATAFRAME OF ALL SUBJECTS INTO LONG FORMAT FOR GGPLOT
 aic_z_df_long <- melt(aic_z_df, id=c("model", "domain", "decay_type"))
 # REORDER VARIABLES FOR PLOTTING
 aic_z_df_long$variable <- factor(aic_z_df_long$variable, 
 	levels= aic_ordered_vars)
 
-
+# PLACE DATAFRAME OF CONVERGED SUBJECTS INTO LONG FORMAT FOR GGPLOT
 aic_z_excld_nonconverg_df_long <- melt(aic_z_excld_nonconverg_df, id=c("model", "domain", "decay_type"))
 # REORDER VARIABLES FOR PLOTTING
 aic_z_excld_nonconverg_df_long$variable <- factor(aic_z_excld_nonconverg_df_long$variable, 
 	levels= aic_excld_ordered_vars,
 	labels= aic_excld_ordered_vars_labels)
-
-
-
-
-# SET TEXT SIZING FOR ALL PLOTS
-text_sizing <- 	theme(axis.text.x = element_text(size=6),
-		axis.text.y = element_text(size=6),
-		axis.title.x = element_text(size=8),
-		axis.title.y = element_text(size=8),
-		legend.text = element_text(size=8),
-		legend.title = element_text(size=8),
-		strip.text.x = element_text(size=9),
-		title = element_text(size=12)) 
 
 
 ##############################################################################
@@ -247,6 +202,7 @@ text_sizing <- 	theme(axis.text.x = element_text(size=6),
 aic_excld_ordered_vars_labels_gain <- rev(c("regret","relief","regret_inaction","relief_inaction","disappointment",
 	"elation","cv","prev. outcome (sure bet)", "prev. outcome (win)","X.Intercept.","AIC","AIC.1","AIC_adjusted","AIC_adjusted_excld","nonconvergent", "n_param"))
 
+# PLACE DATAFRAME OF CONVERGED SUBJECTS INTO LONG FORMAT FOR GGPLOT
 aic_z_excld_nonconverg_df_long <- melt(aic_z_excld_nonconverg_df, id=c("model", "domain", "decay_type"))
 # REORDER VARIABLES FOR PLOTTING
 aic_z_excld_nonconverg_df_long$variable <- factor(aic_z_excld_nonconverg_df_long$variable, 
@@ -291,14 +247,14 @@ dev.off()
 
 # REORDER VARIABLES FOR PLOTTING
 aic_excld_ordered_vars_labels_loss <- rev(c("regret","relief","regret_inaction","relief_inaction","disappointment",
-	"elation","cv","prev. outcome (sure bet)", "prev. outcome (lose)","X.Intercept.","AIC","AIC.1","AIC_adjusted","AIC_adjusted_excld","nonconvergent", "n_param"))
+	"elation","cv","prev. outcome (sure bet)", "prev. outcome (lose)","X.Intercept.","AIC","AIC.1","AIC_adjusted",
+	"AIC_adjusted_excld","nonconvergent", "n_param"))
 
 aic_z_excld_nonconverg_df_long <- melt(aic_z_excld_nonconverg_df, id=c("model", "domain", "decay_type"))
 # REORDER VARIABLES FOR PLOTTING
 aic_z_excld_nonconverg_df_long$variable <- factor(aic_z_excld_nonconverg_df_long$variable, 
 	levels= aic_excld_ordered_vars,
 	labels= aic_excld_ordered_vars_labels_loss)
-
 
 # COMPARE MODELS AND DECAY TYPE FOR LOSS DOMAIN - DECAY TYPES 1-3
 #dev.new(height=4,width=9)
@@ -314,7 +270,6 @@ ggplot(subset(aic_z_excld_nonconverg_df_long, domain=="Loss" & ! variable %in% u
 	scale_fill_manual(values=cols[2:4], breaks=c("1","2","3"), labels=c("1","2","4")) 
 dev.off()
 
-		
 
 # COMPARE MODELS 2 AND 3 FOR LOSS DOMAIN	
 #dev.new(height=4,width=9)
@@ -331,10 +286,9 @@ ggplot(subset(aic_z_excld_nonconverg_df_long, domain=="Loss" & ! variable %in% u
 dev.off()
 
 
-
-
 ##############################################################################
 #								GAIN VS. LOSS
+
 
 # REORDER VARIABLES FOR PLOTTING
 aic_z_excld_nonconverg_df_long <- melt(aic_z_excld_nonconverg_df, id=c("model", "domain", "decay_type"))
@@ -345,7 +299,6 @@ aic_z_excld_nonconverg_df_long$variable <- factor(aic_z_excld_nonconverg_df_long
 # COMPARE GAIN TO LOSS FOR MODEL 3, DECAY TYPE 3	
 myColors <- brewer.pal(3,"Set1")[c(3,1)]
 names(myColors) <- levels(aic_z_excld_nonconverg_df_long$domain)
-
 
 #dev.new(height=4,width=9)
 pdf("~/Documents/Academics/Projects/EyeTrackingGaze2/analysis/_analysis_emot/emotion_adult_params_Gain_vs_Loss_model2_.pdf",height=4,width=6)
