@@ -1,4 +1,4 @@
-
+# THIS FILE GENERATES VECTORS OF SUBJECTS THAT CAN BE USED, BY EPOCH, FROM PRIMARY TEXT FILE
 
 # subject 1 considered pilot - unanalyzable data (no variance), and no age information
 
@@ -7,8 +7,6 @@ birth_date <- strptime(subjectlist$DOB, format = "%m/%d/%y")
 test_date <- strptime(subjectlist$test_date, format = "%m/%d/%y")
 AgeYears <- (test_date - birth_date) / 365
 AgeMonths <- AgeYears * 12
-
-
 
 participant_ages <- as.data.frame( round( cbind(subjectlist$subjectID, AgeYears, AgeMonths, subjectlist$sex ), digits=2))
 names(participant_ages) <- c("subjectID","AgeYears","AgeMonths", "sex")
@@ -69,19 +67,15 @@ mean(controls$AgeYears) # 25.13
 
 
 ###############################################################
-
+#					GOOD SUBJECT LISTSS BY EPOCH
 
 good_adults.decision <- c(51,52,54,55,57,58)
 good_adults.choice <- c(51,52,54,55,57,58)
 good_adults.outcome <- c(51,52,54,55,57,58)
 
-
 good_children.decision <- c(502,505,507,508,509,511,516,517,518,520,521,523) 
 good_children.choice <- c(502,505,507,508,509,511,516,517,518,520,521,523)
 good_children.outcome <- c(502,505,507,508,509,511,516,517,518,520,521,523)
-
-
-
 
 good_all.decision <- c(good_adults.decision, good_children.decision)
 good_all.choice <- c(good_adults.choice, good_children.choice)

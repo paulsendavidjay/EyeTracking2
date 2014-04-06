@@ -5,18 +5,15 @@ eye_data_correction <- function(eye_data, trial_num, max_interp_len = 10) {
 	#trial_num=1
 	a <- eye_data[eye_data$trial==trial_num,]
 	
-	# collect TRUE or FALSE wheter left or right eyes were found
+	# returns binary vector of TRUE (or FALSE) if eye-values were found (or missing)
 	left <- a$left_y != -1
 	right <- a$right_y != -1
 	
-	
-	left <- cut_repeats(left) # returns two lists: one of the order of T's and F's, and one for the length of each, respectively
+	# returns two lists: [[1]] order of T's and F's, and [[2]] the length of each of the sequences respectively
+	left <- cut_repeats(left) 
 	right <- cut_repeats(right)
-	
-	
 
-	if (length(left[[1]]) > 2) {
-	
+	if (length(left[[1]]) > 2) { # if 
 		
 		left[[3]] <- 0* left[[2]]
 		left[[4]] <- 0* left[[2]]

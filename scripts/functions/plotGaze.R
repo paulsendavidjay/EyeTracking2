@@ -1,10 +1,7 @@
 plotGaze <- function(eye_data, subjectID, trial_num, opt_title="") {
 
-
 	eye_data.current <- eye_data[eye_data$trial == trial_num,]
 	eye_data.current <- eye_data.current[eye_data.current$subjectID == subjectID,]
-
-
 
 	if (eye_data.current$gamble[1] == 1) {
 		bg_col ="lavenderblush"

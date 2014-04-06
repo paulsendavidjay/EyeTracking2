@@ -1,7 +1,10 @@
 
 # values in the exclude array will be cut and not counted.
+# returns 
 cut_repeats <- function(array, exclude=c()) {
-	
+	# RETURNS LIST OF LENGTH 2:
+		# [[1]] VECTOR OF ITEMS AS THEY APPEAR, WITHOUT IMMEDIATE REPETITION
+		# [[2]] COUNTS OF ITEMS AS THEY APPEAR (I.E. NUMBER OF REPETITIONS)
 	j = 1
 	for (j in 1:length(array)) {
 		if	(is.element(array[j], exclude)) {

@@ -1,4 +1,4 @@
-
+# FUNCTION TO DETERMINE BOUNDARY FRAME FOR AREAS OF INTEREST
 current_frame_positions <- function(trialType, vert, sideMag, sideSure, boundary_ext=20) {
 
 	# [trialType, vert, sideMag, sideSure] parameters passed in from beh_data file

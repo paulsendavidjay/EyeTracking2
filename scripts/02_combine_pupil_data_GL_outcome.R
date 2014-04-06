@@ -6,12 +6,11 @@ library(MASS)
 library(reshape)
 library(ggplot2)
 library(lme4)
+source("./subject_lists.R")
 
-
+# SPECIFY STUDY DIRECTORY
 study_dir <- c("/Users/Shared/EyeTrackingGaze", 
 	"/Users/dpaulsen/Documents/Academics/Projects/EyeTrackingGaze")
-
-	
 if (file.exists(study_dir[1])) { 
 	study_dir <- study_dir[1] 
 } else if (file.exists(study_dir[2])) { 
@@ -20,23 +19,19 @@ if (file.exists(study_dir[1])) {
 	return('study directory not found')
 }
 
-nsubs <- function(data_frame) {length(levels(as.factor(data_frame$subjectID)))} # function to find number of subjects
-
-source("./subject_lists.R")
 
 
 # INITIALIZE DATA FRAMES
 cmbd_riskData <- data.frame()
 cmbd_outcome_pupil <- vector("list",3) 
-
 cmbd_outcome_pupil_trial_count <- data.frame()
 cmbd_outcome_pupil.norm <- data.frame()
 
 
-
+# READ SUBJECT DATA ONE AT A TIME INTO DATA FRAMES
 processed_data_dir <- "/Users/dpaulsen/Documents/Academics/Projects/EyeTrackingGaze/data/processed_data/"
-
 for (subj in all_subjects_w_cntls) {
+	
 	#preprocess(subj)
  	fileName <- paste(c(processed_data_dir, "beh_data_", subj, ".R"), collapse="" )
  	load(fileName)
@@ -44,8 +39,6 @@ for (subj in all_subjects_w_cntls) {
  	fileName <- paste(c(processed_data_dir, "pupil_data_", subj, "_outcome.R"), collapse="" )
  	load(fileName)
 
- 	
- 	
  	# REPLACE BAD VALUES
 	temp <- outcome_pupil[,13:253]
 	temp[temp < 0 | temp > 15] <- NA # replace negative and Inf with NaN
@@ -61,7 +54,6 @@ for (subj in all_subjects_w_cntls) {
 		} 
 	}
  	cmbd_outcome_pupil[[1]] <- rbind(cmbd_outcome_pupil[[1]], outcome_pupil) # add to list
-
 
 	# GENERATE NORMALIZED PUPIL DIAMETERS cmbd_outcome_pupil[[2]]
 	temp.norm <- outcome_pupil
@@ -79,9 +71,6 @@ for (subj in all_subjects_w_cntls) {
 	outcome_pupil.trialCount <- cbind(outcome_pupil$subjectID[1], outcome_pupil.count[,1:3], outcome_pupil.trialCount)
 	names(outcome_pupil.trialCount)[1:4] <- c("subjectID","eye", "outcome", "condition")
 	cmbd_outcome_pupil[[3]] <- rbind(cmbd_outcome_pupil[[3]], outcome_pupil.trialCount) # add to list
-
-
- 	
  }
 
 # CHANGE NUMERIC TO FACTORS, LABEL GROUPS
@@ -94,6 +83,7 @@ for (i in 1:3) {
 	cmbd_outcome_pupil[[i]][,"condition"] <- as.factor(cmbd_outcome_pupil[[i]][,"condition"])
 }
 
+# DELETE OLD, SAVE NEW DATAFRAMES
 cmbd_outcome_pupil_file_name <- paste(c(study_dir, "/data/processed_data/pupil_data_cmbd_outcome_pupil.R"), collapse="")
 unlink(cmbd_outcome_pupil_file_name)
 save(cmbd_outcome_pupil, file= cmbd_outcome_pupil_file_name)

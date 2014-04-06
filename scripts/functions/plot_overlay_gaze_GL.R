@@ -31,7 +31,6 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 	trialTypeLabel <- trialTypeLabelList[eye_data.current$trialType[1]]
 
 
-
 	################################################
 	############ 	DATA INITIALIZATION
 	current_title <- paste(c(subjectID, ", trial ", trial_num, ": ", opt_title), sep=" ", collapse="")
@@ -42,17 +41,10 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 	trialType <- eye_data.current$trialType[1]
 	current_coinsWon <- eye_data.current$coinsWon[1]
 	
-
-	
 	s1 <- eye_data.current$sure1[1] # value of sure bet
 	s2 <- eye_data.current$sure2[1] # value of sure bet
 	m1 <- eye_data.current$mag1[1] # value of large magnitude outcome
 	m2 <- eye_data.current$mag2[1] # value of small magnitude outcome
-	
-	# replace missed fixations with "NaN" to avoid plotting excess values
-
-
-	# eye_data.current <- eye_data.current[eye_data.current$trialTime >= 0,] # initially used to separate baseline data from trial data. not necessary with gaze contingent
 	
 	
 	################################################
@@ -65,7 +57,6 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 	gradient.pos <- c(1150, 288, 1160, 88) # x_left, y_bottom, x_right, y_top
 	choiceMargin <- 20 # margin between fixation location boundaries and dashed box indicating chosen option
 	cntrFixBndry <- c(max(xrange)/2 - 20, max(yrange)/2 - 20, max(xrange)/2 + 20, max(yrange)/2 + 20)
-
 
 	# DRAW/SET BASIC POT DIMENSIONS
 	par(mar=c(1,1,1,1))
@@ -97,8 +88,6 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 		# DRAW BOUNDS FOR FIX LOCATION 
 	current_positions <- current_frame_positions(eye_data.current$trialType[1], eye_data.current$vert[1], eye_data.current$sideMag[1], eye_data.current$sideSure[1])
 	if (trialType == 1)	{
-		# rect(current_positions[[1]][[1]][1], current_positions[[1]][[2]][1], current_positions[[1]][[1]][2], current_positions[[1]][[2]][2], col="NA", border="blue2", lwd=1)
-		# rect(current_positions[[2]][[1]][1], current_positions[[2]][[2]][1], current_positions[[2]][[1]][2], current_positions[[2]][[2]][2], col="NA", border="blue4", lwd=1)
 	
 		if (current_gamble == 99) { 
 			choice_frame_pos <- 1
@@ -106,11 +95,12 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 			choice_frame_pos <- 2
 		}
 		
+		# DRAW CHOICE BOX BOUNDARY
 		rect(current_positions[[choice_frame_pos]][[1]][1] - choiceMargin, current_positions[[choice_frame_pos]][[2]][1] - choiceMargin, 
 			current_positions[[choice_frame_pos]][[1]][2] + choiceMargin, current_positions[[choice_frame_pos]][[2]][2] + choiceMargin, 
 			col="NA", lty="dashed", border="gray50", lwd=1)
-
-
+		
+		# DRAW OUTCOME BOX BOUNDARY
 		if (epoch == 'outcome') { 
 			rect(current_positions[[choice_frame_pos]][[1]][1], current_positions[[choice_frame_pos]][[2]][1], 
 				current_positions[[choice_frame_pos]][[1]][2], current_positions[[choice_frame_pos]][[2]][2], 
@@ -118,11 +108,6 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 		}
 
 	} else if (trialType > 1 & trialType < 6) {
-
-
-		# rect(current_positions[[1]][[1]][1], current_positions[[1]][[2]][1], current_positions[[1]][[1]][2], current_positions[[1]][[2]][2], col="NA", border="green4", lwd=1)
-		# rect(current_positions[[2]][[1]][1], current_positions[[2]][[2]][1], current_positions[[2]][[1]][2], current_positions[[2]][[2]][2], col="NA", border="orange3", lwd=1)
-		# rect(current_positions[[3]][[1]][1], current_positions[[3]][[2]][1], current_positions[[3]][[1]][2], current_positions[[3]][[2]][2], col="NA", border="blue2", lwd=1)
 
 		xmin <- min(current_positions[[1]][[1]][1], current_positions[[2]][[1]][1])
 		xmax <- max(current_positions[[1]][[1]][2], current_positions[[2]][[1]][2])
@@ -143,32 +128,29 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 			}
 		
 		} else {
-			
-			
-			# rect(xmin - choiceMargin, current_positions[[3]][[2]][1] - choiceMargin, 
-				# xmax + choiceMargin, current_positions[[3]][[2]][2] + choiceMargin, 
-				# col="NA", lty="dashed", border="gray50", lwd=1)
 			outcome_frame_pos <- 3
 		}
-
+		
+		# DRAW OUTCOME BOX BOUNDARY
 		if (epoch == 'outcome') {
 			rect(current_positions[[outcome_frame_pos]][[1]][1], current_positions[[outcome_frame_pos]][[2]][1], 
 				current_positions[[outcome_frame_pos]][[1]][2], current_positions[[outcome_frame_pos]][[2]][2], 
 				col="NA", lty="solid", border="yellow", lwd=1)	
 		}
-	
 
-	} 
+	} # end if trialType
 	
 ################################################################################################
 
     # DRAW CENTER FIXATION BOUNDARY
     rect(cntrFixBndry[1], cntrFixBndry[2], cntrFixBndry[3], cntrFixBndry[4], col="NA", border="gray50", lwd=1)
 	
-	###########      !!!!!!!!!!!!!!      ################
+	# ONLY SELECT DATA FOR WHICH WE HAVE FIXATIONS
 	eye_data.current <- eye_data.current[eye_data.current$Found != "None",] # only select data for which we have fixations
-
-	if (nrow(eye_data.current) > 0) {  # if there are points in the eye data
+	
+	# IF THERE ARE POINTS IN THE EYE DATA
+	if (nrow(eye_data.current) > 0) {  
+		
 		# DRAW POINTS AT EACH FIXATION
 		points(eye_data.current$GazepointX, eye_data.current$GazepointY, col=current_colors_vector, pch=21, bg=current_colors_vector, cex=0.5, lwd=0.01)
 		
@@ -177,26 +159,16 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 			lines(c(eye_data.current$GazepointX[j],eye_data.current$GazepointX[j+1]), c(eye_data.current$GazepointY[j], eye_data.current$GazepointY[j+1]), col= current_colors_vector[j], lwd=1)
 		}
 
-	# DRAW GRADIENT LEGEND
-	gradient.rect(gradient.pos[1], gradient.pos[2], gradient.pos[3], gradient.pos[4], col=rev(current_colors_vector) , gradient="y")
-	startTime = paste(c(eye_data.current$trialTime[1], " ms"), sep="", collapse="")
-	endTime = paste(c(round(tail(eye_data.current$trialTime, 1), 3), " ms"), sep="", collapse="")
-	text(gradient.pos[1], gradient.pos[4], startTime, adj=c(0.5,-0.25), col="white") # first trialTime
-	text(gradient.pos[1], gradient.pos[2], endTime, adj=c(0.5,1.25), col="white") # last trialTime
-	
-	
+		# DRAW GRADIENT LEGEND
+		gradient.rect(gradient.pos[1], gradient.pos[2], gradient.pos[3], gradient.pos[4], col=rev(current_colors_vector) , gradient="y")
+		startTime = paste(c(eye_data.current$trialTime[1], " ms"), sep="", collapse="")
+		endTime = paste(c(round(tail(eye_data.current$trialTime, 1), 3), " ms"), sep="", collapse="")
+		text(gradient.pos[1], gradient.pos[4], startTime, adj=c(0.5,-0.25), col="white") # first trialTime
+		text(gradient.pos[1], gradient.pos[2], endTime, adj=c(0.5,1.25), col="white") # last trialTime
 	
 	} else {
 		text(gradient.pos[1], gradient.pos[4], 'No Trace', adj=c(0.5,-0.25), col="white") # first trialTime
-	}
-	
-	
-	# add fixation order
-	# fix_order_list <- cut_repeats(eye_data.current$fix_object, exclude=c(0,"null"))
-	# if (length(fix_order_list[[1]]) > 0 ) {
-		# fix_order_table <- as.table(cbind(fix_order_list[[1]], fix_order_list[[2]]))
-		# addtable2plot(15, 675, t(fix_order_table), yjust=-.25, cex=.7, text.col="gray50", display.rownames=F, display.colnames=F)
-	# }
+	} # end if nrow(eye_data)
 	
 	# DRAW TRIAL LEGEND
 	legend.text <- paste(c(
@@ -221,13 +193,9 @@ plot_overlay_gaze <- function(eye_data, subjectID, trial_num, epoch, opt_title="
 		if (eye_data.current$exclude[1] == 1) {
 			text(512, 50, "EXCLUDE", col="white")
 		}
-	}
+	} 
 
-	# PLOT ACCUMULATION OF GAZE
-	#subplot(plotGaze(eye_data, subjectID, trial_num), c(775, xrange[2]-5), c(yrange[1]-5, 600))
-
-
-}
+} # end function()
 
 	
 
