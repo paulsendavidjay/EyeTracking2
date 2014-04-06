@@ -42,13 +42,11 @@ for (subj in all_subjects) {
  	fileName <- paste(c(processed_data_dir, "eye_data_", subj, ".R"), collapse="" )
  	load(fileName)
 
-
  	fileName <- paste(c(processed_data_dir, "pupil_data_", subj, "outcome.R"), collapse="" )
  	load(fileName)
 
 	eye_data$left_pup_diam[eye_data$left_pup_diam == -1] <- NaN # replace Inf with NaN
 	eye_data$right_pup_diam[eye_data$right_pup_diam == -1] <- NaN # replace Inf with NaN
-
  	
 	for (trialNum in 1:nrow(beh_data)) {
 		print(trialNum)
@@ -88,7 +86,6 @@ for (subj in all_subjects) {
 	outcome_pupil.trialCount <- cbind(outcome_pupil$subjectID[1], outcome_pupil.count[,1:3], outcome_pupil.trialCount)
 	names(outcome_pupil.trialCount)[1:4] <- c("subjectID","eye", "outcome", "condition")
 	cmbd_outcome_pupil[[3]] <- rbind(cmbd_outcome_pupil[[3]], outcome_pupil.trialCount) # add to list
-
  	
  }
 

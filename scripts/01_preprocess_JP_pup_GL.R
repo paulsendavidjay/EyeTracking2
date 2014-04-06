@@ -78,7 +78,7 @@ eye_data$GazepointX <- 0
 eye_data$GazepointY <- 0
 
 
-# initialize sample count variables
+# initialize variables for behavioral data dataframe
 beh_data$mag1_samp.decision <- 0
 beh_data$mag2_samp.decision <- 0
 beh_data$sure1_samp.decision <- 0
@@ -108,9 +108,6 @@ beh_data$mag1_prop.outcome <- 0
 beh_data$mag2_prop.outcome <- 0
 beh_data$sure1_prop.outcome <- 0
 beh_data$sure2_prop.outcome <- 0
-
-
-
 
 beh_data$ffo.decision <- ""
 beh_data$lfo.decision <- ""
@@ -160,6 +157,7 @@ beh_data$minPup <- 0
 beh_data$maxPup <- 0
 
 
+# initialize variables for eye data dataframe
 eye_data$trial <- 0
 eye_data$subjectID <- subjectID
 eye_data$trialType <- 0
@@ -177,12 +175,10 @@ eye_data$coinsWon <- -1
 eye_data$ffo <- ''
 eye_data$lfo <- ''
 
-
 eye_data$mag1_fix <- 0
 eye_data$mag2_fix <- 0
 eye_data$sure1_fix <- 0
 eye_data$sure2_fix <- 0
-
 
 eye_data$Found <- 'None'
 eye_data$Found[eye_data$left_valid < 4] = 'Left'
@@ -196,6 +192,7 @@ eye_data$replaced_L <- FALSE
 eye_data$replaced_R <- FALSE
 
 
+# initialize output dataframe objects
 delay_pupil <- data.frame()
 outcome_pupil <- data.frame()
 iti_pupil <- data.frame()
@@ -272,7 +269,7 @@ for (i in 1:nrow(beh_data)) {
 		apply( data.frame( ( corrected_data$left_y != -1 ) + ( corrected_data$right_y != -1 ) ), 1, function(x) { max(x,1)})
 	
 	
-	# PLOTTING OF MISSING AND INTERPOLATED DATA SHOULD GO HERE, WHILE BOTH OLD AND NEW GAZEPOINTS ARE IN MEMORY
+	# PLOTTING OF MISSING AND INTERPOLATED DATA SHOULD GO HERE, WHILE BOTH OLD AND NEW GAZEPOINTS ARE IN MEMORY: DEBUG
 	# par(mfrow=c(2,1))
 	# plot(1:length(corrected_data$GazepointX), eye_data$GazepointX[eye_data$trial==i],type='l', ylim=c(0,1200),lty='dotted', main="gazepoint X")
 	# lines(1:length(corrected_data$GazepointX), corrected_data$GazepointX,col='green')
@@ -289,9 +286,6 @@ for (i in 1:nrow(beh_data)) {
 	
 	# reassign corrected data to eye_data
 	eye_data[current_trial_onset.decision:current_trial_offset.outcome,] <- corrected_data	
-	
-	# ADD MAX AND MIN PUPIL DATA TO BEHAVIORAL ARRAY
-	
 	
 	
 	# MISSING DATA POINTS SUMMARY
@@ -346,7 +340,6 @@ for (i in 1:nrow(beh_data)) {
 		current_sure2_pos <- current_frame_positions(beh_data$trialType[i], beh_data$vert[i], beh_data$sideMag[i], beh_data$sideSure[i])[[3]]
 
 
-
 		eye_data$mag1_fix[current_trial_onset.decision:current_trial_offset.outcome] <- 
 			is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
 				eye_data$GazepointY[current_trial_onset.decision:current_trial_offset.outcome],
@@ -356,8 +349,6 @@ for (i in 1:nrow(beh_data)) {
 			is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
 				eye_data$GazepointY[current_trial_onset.decision:current_trial_offset.outcome],
 				current_mag2_pos[[1]], current_mag2_pos[[2]])		
-				
-				
 				
 		eye_data$sure2_fix[current_trial_onset.decision:current_trial_offset.outcome] <- 
 			is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
@@ -373,51 +364,11 @@ for (i in 1:nrow(beh_data)) {
 		} else { beh_data$outcome[i] <- 0 }
 
 	
-	} #else if (beh_data$trialType[i] == 6) {
-	
-# # 	
-		# current_mag1_pos <- current_frame_positions(beh_data$trialType[i], beh_data$vert[i], beh_data$sideMag[i], beh_data$sideSure[i])[[1]]
-		# current_mag2_pos <- current_frame_positions(beh_data$trialType[i], beh_data$vert[i], beh_data$sideMag[i], beh_data$sideSure[i])[[2]]
-		# current_sure1_pos <- current_frame_positions(beh_data$trialType[i], beh_data$vert[i], beh_data$sideMag[i], beh_data$sideSure[i])[[3]]
-		# current_sure2_pos <- current_frame_positions(beh_data$trialType[i], beh_data$vert[i], beh_data$sideMag[i], beh_data$sideSure[i])[[4]]
-		
-		
-		# eye_data$mag1_fix[current_trial_onset.decision:current_trial_offset.outcome] <- 
-			# is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
-				# eye_data$GazepointY[current_trial_onset.decision:current_trial_offset.outcome],
-				# current_mag1_pos[[1]], current_mag1_pos[[2]])
-		
-		# eye_data$mag2_fix[current_trial_onset.decision:current_trial_offset.outcome] <- 
-			# is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
-				# eye_data$GazepointY[current_trial_onset.decision:current_trial_offset.outcome],
-				# current_mag2_pos[[1]], current_mag2_pos[[2]])		
-		
-		
-		
-		# eye_data$sure1_fix[current_trial_onset.decision:current_trial_offset.outcome] <- 
-			# is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
-				# eye_data$GazepointY[current_trial_onset.decision:current_trial_offset.outcome],
-				# current_sure1_pos[[1]], current_sure1_pos[[2]])
-		
-		# eye_data$sure2_fix[current_trial_onset.decision:current_trial_offset.outcome] <- 
-			# is_bounded(eye_data$GazepointX[current_trial_onset.decision:current_trial_offset.outcome],
-				# eye_data$GazepointY[current_trial_onset.decision:current_trial_offset.outcome],
-				# current_sure2_pos[[1]], current_sure2_pos[[2]])
-	
-	
-		# if (beh_data$coinsWon[i] == beh_data$mag1[i]) {
-			# beh_data$outcome[i] <- 2
-		# } else if (beh_data$coinsWon[i] == beh_data$sure1[i] ){ 
-			# beh_data$outcome[i] <- 2 
-		# } else { beh_data$outcome[i] <- 0 }
-	
-	# } # end if trialType
+	}  # end if trialType
 		
 	
 	fix_cols <- c("mag1_fix", "mag2_fix", "sure1_fix", "sure2_fix")
 	fix_col_name <- c("mag1", "mag2", "sure1", "sure2")
-
-	#eye_data[current_trial_onset.decision:current_trial_offset.outcome, fix_cols]
 
 	#################################################################################
 	#################################################################################
@@ -439,7 +390,7 @@ for (i in 1:nrow(beh_data)) {
 	beh_data$sure2_samp.outcome[i] <- sum(eye_data$sure2_fix[current_trial_onset.outcome:current_trial_offset.outcome])
 
 
-	# JOHN PAYNE'S ANALYSIS
+	# JOHN PAYNE'S ANALYSIS - BREAK DECISION EPOCH INTO 5 BINS
 	beh_data$mag1_samp.decision.1[i] <- sum(eye_data$mag1_fix[current_trial_onset.decision:(current_trial_onset.decision + length_5th)])
 	beh_data$mag2_samp.decision.1[i] <- sum(eye_data$mag2_fix[current_trial_onset.decision:(current_trial_onset.decision + length_5th)])
 	beh_data$sure1_samp.decision.1[i] <- sum(eye_data$sure1_fix[current_trial_onset.decision:(current_trial_onset.decision + length_5th)])

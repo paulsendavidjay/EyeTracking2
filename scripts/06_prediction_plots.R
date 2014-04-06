@@ -52,21 +52,21 @@ coeff <- current_glm@fixef
 
 
 
-png(filename="~/Documents/Academics/Projects/EyeTrackingGaze2/analysis/prediction.png", height=4, width=4, units="in", res=300)
+png(filename="~/Documents/Academics/Projects/EyeTrackingGaze2/analysis/prediction.png", height=4, width=4, units="in", res=900)
 plot.new()
 
 
 ###### BASIC PLOTTING PARAMETERS
-main_cex = 1
+main_cex = 1.4
 
 axis_cex=0.8
 label_cex = 0.8
 
-plot_cex = 0.7
+plot_cex = 1.5
 point_linewidth = 0.5
-linewidth=2
+linewidth=3
 
-legend_cex = 0.7
+legend_cex = 1.2
 legend_ptcex = plot_cex
 legend_linewidth = 1
 
@@ -93,25 +93,25 @@ cv <- .7
 curve(invlogit (cbind(1, cv, prev_outcome1, prev_outcome2, x, regret, relief_inaction, regret_inaction) %*% coeff), add=F, xaxt='n',
 	col='black',
 	ylim=c(0,1),
-	main="", ylab="Probability of Choosing Gamble", xlab="Emotion Value",
+	main="Emotion's Effect on Risk Taking", ylab="Probability of Choosing Gamble", xlab="Emotion Value",
 	cex=plot_cex, lwd=linewidth, mgp= axis_mgp, cex.axis = axis_cex, cex.main=main_cex, cex.lab=label_cex)
 axis(1, at = c(0,0.5,1), labels=c("None","Medium","Full"), cex.axis=axis_cex)
 curve(invlogit (cbind(1, cv, prev_outcome1, prev_outcome2, relief, x, relief_inaction, regret_inaction) %*% coeff), add=T, 
 	col='blue', lwd=linewidth)
 curve(invlogit (cbind(1, cv, prev_outcome1, prev_outcome2, relief, regret, relief_inaction, x) %*% coeff), add=T, 
 	col='green3', lwd=linewidth)
-legend(0.0, 0.25,
+legend(0.0, 0.28,
 	title="Experienced Emotion", title.adj=0.15,
 	c("Regret for not gambling", "Regret after losing", "Relief after winning"),
 	lty=c(1,1,1), 
-	cex=0.75,
+	cex=1,
 	bty="n",
 	col=c('green3','blue','black'))
 
 
 text(0.32, 0.75, "30% increase", cex=legend_cex, col="black")
 text(0.6, 0.55, "12% decrease", cex=legend_cex, col="black")
-text(0.85, 0.37, "26% decrease", cex=legend_cex, col="black")
+text(0.83, 0.395, "26% decrease", cex=legend_cex, col="black")
 
 
 # CALCULATE DIFFERENCE IN PROBABILITY OF GAMBLING DUE TO EMOTION
