@@ -4,10 +4,8 @@
 
 GazeContingent2 DETAILS: 
 THIS VERSION WORKS.
-NEED TO DO: 
-    TEST COUNTERBALANCING VARIABLES
-    
-    
+
+
 
 The all of the files required for this script are enclosed in the subdirectories of the parent directory.
     STIM_DIMS_PARAMS_RISK contains general settings: colors, frame coordinates, audio files, coin images, etc.
@@ -81,13 +79,9 @@ if strcmp(computer, 'MACI')
     c_key = 6; % calibrate
     d_key = 7; % draw eyes or display eyes
     space_key = 44;
-    
-    
     left_jst = 5;
     right_jst = 6;
     two_jst = 2;
-    
-    
 else
     left_key = 37;
     right_key = 39;
@@ -99,7 +93,6 @@ else
     p_key = 80;
     r_key = 82;
     space_key = 32;
-    %jst
     left_jst = 5;
     right_jst = 6;
     two_jst = 2;
@@ -393,7 +386,7 @@ while trial <= nrows;
     
     
     if DEBUG
-
+        
         % CLOSE ALL OPEN TEXTURES AND OFF-SCREEN WINDOWS
         windowPtrs=Screen('Windows');
         if length(windowPtrs) > 1
@@ -563,14 +556,14 @@ while trial <= nrows;
         SCREEN('FrameRect', ChoiceStim, FixColor3, sureFrame{vertA}, lineWidth);
         SCREEN('FrameRect', ChoiceStim, FixColor3, sureFrame{vertB}, lineWidth);
         
-
+        
         
         % POSSIBLE OUTCOMES
         % A
         winAmount{vertA} = sure1; %#ok<AGROW>
         Screen('BlendFunction', SureBetA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); % allows screen to apply transparency
         SCREEN( 'DrawTexture', SureBetA, tex_CurrentStimImage, [], fullScreen, [], [], alpha_setting ); % copy transparency
-
+        
         SCREEN('FillRect', SureBetA, black, sureFrameBackground{vertA});
         SCREEN( 'DrawTexture', SureBetA, tex3, [], surePos{vertA});
         SCREEN('CopyWindow', SureBetA, SureBetAPlain, fullScreen, fullScreen);
@@ -579,12 +572,12 @@ while trial <= nrows;
         winAmount{vertB}  = sure2; %#ok<NASGU>
         Screen('BlendFunction', SureBetB, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); % allows screen to apply transparency
         SCREEN( 'DrawTexture', SureBetB, tex_CurrentStimImage, [], fullScreen, [], [], alpha_setting ); % copy transparency
-
+        
         SCREEN('FillRect', SureBetB, black, sureFrameBackground{vertB});
         SCREEN( 'DrawTexture', SureBetB, tex4, [], surePos{vertB});
         SCREEN('CopyWindow', SureBetB, SureBetBPlain, fullScreen, fullScreen);
         SCREEN('FrameRect', SureBetB, sureFrameColor, sureFrame{vertB}, lineWidth);
-
+        
         
         
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -626,7 +619,7 @@ while trial <= nrows;
         %tex_pImageA = SCREEN( 'MakeTexture', window, pImageA );
         
         
-
+        
         
         % SCREEN CurrentStim part1
         % Aa
@@ -639,7 +632,7 @@ while trial <= nrows;
         % tex_EmptyFrames
         EmptyFramesArray = SCREEN('GetImage', CurrentStim, fullScreen);
         tex_EmptyFrames = SCREEN( 'MakeTexture', window, EmptyFramesArray);
-
+        
         % SCREEN CurrentStim part2
         SCREEN('FillRect', CurrentStim, black, sureFrame{vertB});
         SCREEN( 'DrawTexture', CurrentStim, tex1, [], gamble{vertA}{a} );
@@ -860,7 +853,7 @@ while trial <= nrows;
     
     % Build a single transparency mask texture:
     masktex=Screen('MakeTexture', window, maskblob);
-
+    
     
     
     
@@ -897,7 +890,7 @@ while trial <= nrows;
         %when = flipTime + ifi + 0.02;
     end
     
-
+    
     SCREEN('FillOval', FixStim, frameColor, fixPosition);
     SCREEN('CopyWindow', FixStim, window, fullScreen, fullScreen);
     flipTime = SCREEN('Flip', window);
@@ -913,7 +906,7 @@ while trial <= nrows;
     while (eyes_centered == 0)
     
         WaitSecs(.005); % wait 5 ms to keep processors from overloading
-
+        
         
         if (EYETRACKER)
             eyeTrack = talk2tobii('GET_SAMPLE');
@@ -925,17 +918,17 @@ while trial <= nrows;
                 [keyIsDown, secs, keyCode] = KbCheck;
                 if keyIsDown
                     if (find(keyCode) == d_key) % draw eyes
-
+                        
                         
                         talk2tobii('EVENT','Recalibration_on', trial);
-
+                        
                         BlankSCREEN = SCREEN('OpenOffSCREENwindow', window, bgd, fullScreen);
                         SCREEN('TextSize', BlankSCREEN, 20);
                         SCREEN('DrawText', BlankSCREEN, 'PRESS ANY KEY TO REDO EYE POSITION & CALIBRATION', floor(.6*XMID), YMID, white, bgd, 1);
                         SCREEN('CopyWindow', BlankSCREEN, window, fullScreen, fullScreen);
                         SCREEN('Flip', window);
-
-
+                        
+                        
                         KbWait;
                             
                         DRAW_EYES;
@@ -959,13 +952,13 @@ while trial <= nrows;
                                 begin_cals = 1;
                             end
                         end
-
+                        
                         talk2tobii('STOP_RECORD');
                         talk2tobii('STOP_TRACKING');
                         
-
+                        
                         CALIBRATE;
-
+                        
                         SCREEN('CopyWindow', FixStim, window, fullScreen, fullScreen);
                         flipTime = SCREEN('Flip', window, when);
                         
@@ -1020,7 +1013,7 @@ while trial <= nrows;
         
         xMean = mean(xPositions);
         yMean = mean(yPositions);
-
+        
         
         
         
@@ -1078,8 +1071,8 @@ while trial <= nrows;
     %                  AND WAIT FOR INITIAL RESPONSE
     %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-  
+    
+    
     presTime = GetSecs() - startTime;
     while KbCheck; end % Wait until all keys are released.
     confirm = 0;
@@ -1093,8 +1086,7 @@ while trial <= nrows;
     
     if( EYETRACKER )
         talk2tobii('EVENT','TrialOnset', trial);
-    end
-
+    en
     
     
     while (confirm == 0)      %(currentTime + 2 > GetSecs)
@@ -1105,7 +1097,7 @@ while trial <= nrows;
         SCREEN('DrawTexture', window, tex_EmptyFrames, fullScreen, fullScreen)
         SCREEN('FillOval', window, FixColor2, fixPosition);
         
-
+        
         
         % -----------------------------------------------------
         %               EYE/CURSOR POSITION CHECK
@@ -1149,41 +1141,6 @@ while trial <= nrows;
         
         
         
-        %{
-        % -----------------------------------------------------
-        %               CREATE BLENDING IMAGES
-        % -----------------------------------------------------
-                         
-        
-        maskRect = [ xMean-maskRadius, yMean-maskRadius, xMean+maskRadius+1, yMean+maskRadius+1]; % center dRect on current eye or mouse position
-        
-        
-        % Step 1: Draw the alpha-mask into the backbuffer. It
-        % defines the aperture for foveation: The center of gaze
-        % has zero alpha value. Alpha values increase with distance from
-        % center of gaze according to a gaussian function and
-        % approach 255 at the border of the aperture...
-        Screen('BlendFunction', window, GL_ONE, GL_ZERO);
-        Screen('DrawTexture', window, masktex, [], maskRect);
-        
-        % Step 2: Draw peripheral image. It is only drawn where
-        % the alpha-value in the backbuffer is 255 or high, leaving
-        % the foveated area (low or zero alpha values) alone:
-        % This is done by weighting each color value of each pixel
-        % with the corresponding alpha-value in the backbuffer
-        % (GL_DST_ALPHA).
-        Screen('BlendFunction', window, GL_DST_ALPHA, GL_ZERO);
-        Screen('DrawTexture', window, tex_EmptyFrames, fullScreen, fullScreen);
-        
-        % Step 3: Draw foveated image, but only where the
-        % alpha-value in the backbuffer is zero or low: This is
-        % done by weighting each color value with one minus the
-        % corresponding alpha-value in the backbuffer
-        % (GL_ONE_MINUS_DST_ALPHA).
-        Screen('BlendFunction', window, GL_ONE_MINUS_DST_ALPHA, GL_ONE);
-        Screen('DrawTexture', window, tex_CurrentStimImage, fullScreen, fullScreen);
-        %}
-
         
         % IF NOT USING BLENDING SCHEME
         Screen('DrawTexture', window, tex_EmptyFrames, fullScreen, fullScreen);
@@ -1252,16 +1209,16 @@ while trial <= nrows;
                 
             % B B
             elseif ( IsBounded(xMean, yMean, gambleFrame{vertB}{B}) )
-
+            
                 SCREEN( 'DrawTexture', alternatives_window, tex4, [], gamble{vertB}{B});
                 sure2_fix_count = sure2_fix_count + 1;
         
             end
-
+        
         end
         
-
-
+        
+        
         
         % -----------------------------------------------------
         %               KEYBOARD CHECK
@@ -1276,7 +1233,7 @@ while trial <= nrows;
                     clear SCREEN;
                     fclose(fid1)
                     fclose('all')
-
+                    
                     if EYETRACKER
                         talk2tobii('STOP_RECORD');
                         WaitSecs(0.05);
@@ -1299,8 +1256,8 @@ while trial <= nrows;
                     if( EYETRACKER )
                         talk2tobii('EVENT','Pause', 0);
                     end
-
-
+                    
+                    
                     while (pause == 1)
                         [keyIsDown, secs, keyCode] = KbCheck;
                         if keyIsDown
@@ -1329,7 +1286,7 @@ while trial <= nrows;
         
         
         
-
+        
         % -----------------------------------------------------
         %               GAMBEPAD CHECK
         % -----------------------------------------------------        
@@ -1359,7 +1316,7 @@ while trial <= nrows;
         
     end % while confirm == 0
     
-
+    
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
@@ -1373,8 +1330,8 @@ while trial <= nrows;
     if( EYETRACKER )
         talk2tobii('EVENT','Decision', trial);
     end
-   
-       
+    
+    
     
     
     
@@ -1410,155 +1367,6 @@ while trial <= nrows;
     SCREEN('Flip', window);
     
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %
-    %           WAIT FOR EYE-CENTERING AGAIN
-    %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-    
-    %{
-    Screen('FillOval', FixStim, FixColor2, fixPosition);
-    Screen('CopyWindow', FixStim, window, fullScreen, fullScreen);
-    flipTime = Screen('Flip', window);
-    
-    
-    
-    
-    % wait for eyes to be centered at fixation again
-    sample = 0; xPositions = XMID*ones(track_avg_pnts,1); yPositions = YMID*ones(track_avg_pnts,1);
-    eyes_centered = 0;
-    while (eyes_centered == 0)
-    
-        if (EYETRACKER)
-            eyeTrack = talk2tobii('GET_SAMPLE');
-            x = (eyeTrack(1)+eyeTrack(3))*XMAX/2;
-            y = (eyeTrack(2)+eyeTrack(4))*YMAX/2;
-            
-            
-            try
-                [keyIsDown, secs, keyCode] = KbCheck;
-                if keyIsDown
-                    if (find(keyCode) == d_key) % draw eyes
-
-                        
-                        %%talk2tobii('EVENT','Recalibration_on', trial);
-
-                        BlankScreen = Screen('OpenOffScreenwindow', window, bgd, fullScreen);
-                        Screen('TextSize', BlankScreen, 20);
-                        Screen('DrawText', BlankScreen, 'PRESS ANY KEY TO REDO EYE POSITION & CALIBRATION', floor(.6*XMID), YMID, white, bgd, 1);
-                        Screen('CopyWindow', BlankScreen, window, fullScreen, fullScreen);
-                        Screen('Flip', window);
-
-
-                        KbWait;
-                            
-                        DRAW_EYES;
-                    
-                        
-                        % PRESENT STARTING Screen
-                        BlankScreen = Screen('OpenOffScreenwindow', window, bgd, fullScreen);
-                        Screen('TextSize', BlankScreen, 20);
-                        Screen('DrawText', BlankScreen, 'press "C" and "ENTER" to continue with calibration', floor(.6*XMID), YMID, white, bgd, 1);
-                        Screen('CopyWindow', BlankScreen, window, fullScreen, fullScreen);
-                        Screen('Flip', window);
-                        
-                        
-                        % WAIT FOR KEY PRESS
-                        %choose if you want to redo the calibration
-                        %disp('Press space to resume calibration or q to exit calibration and continue tracking');
-                        begin_cals = 0;
-                        while (begin_cals == 0)
-                            tt= input('press "C" and "ENTER" to continue with calibration\n','s');
-                            if( strcmpi(tt,'C') || strcmpi(tt,'c') )
-                                begin_cals = 1;
-                            end
-                        end
-
-                        %talk2tobii('STOP_RECORD')
-                        talk2tobii('STOP_TRACKING');
-                        
-
-                        CALIBRATE;
-
-                        Screen('CopyWindow', FixStim, window, fullScreen, fullScreen);
-                        flipTime = Screen('Flip', window, when);
-                        
-                        
-                        
-                        %%talk2tobii('EVENT','Recalibration_off', trial);
-                        
-                        talk2tobii('START_TRACKING');
-                        WaitSecs(0.05);
-                        %talk2tobii('RECORD')    
-                        WaitSecs(0.05);
-                        
-                    elseif (find(keyCode) == esc_key) || (find(keyCode) == q_key) %q or esc to quit win(81;27) mac(41;20)
-                    ShowCursor;
-                    clear Screen;
-                    %fclose(fid1)
-                    fclose('all')
-                    if EYETRACKER
-                        %talk2tobii('STOP_RECORD')
-                        WaitSecs(0.05);
-                        talk2tobii('STOP_TRACKING');
-                        WaitSecs(0.05);
-                        %%talk2tobii('SAVE_DATA', trackFileName, eventFileName, 'TRUNK');
-                        WaitSecs(0.5);
-                        talk2tobii('DISCONNECT');
-                        WaitSecs(0.5);
-                        [status,history] = talk2tobii('GET_STATUS');
-                    end
-                    return
-                    end
-                end
-            end
-            
-            
-            
-            
-            if (eyeTrack(11) < 4) && (eyeTrack(12) < 4) % don't add to average if eye's are not present
-            
-                xPositions(mod(sample, track_avg_pnts) + 1) = x;
-                yPositions(mod(sample, track_avg_pnts) + 1) = y;
-                sample=sample+1;
-                
-            end
-            %fprintf('%1.2f %1.2f\n', x, y);
-        else
-            [x,y,buttons] = GetMouse(1);
-            xPositions(mod(sample, track_avg_pnts) + 1) = x;
-            yPositions(mod(sample, track_avg_pnts) + 1) = y;
-            sample=sample+1;
-        end    
-        
-        xMean = mean(xPositions);
-        yMean = mean(yPositions);
-
-        
-        
-        
-        % -----------------------------------------------------
-        %               DRAW EYE/CURSOR POSITION
-        % -----------------------------------------------------
-        
-        
-        % plot eye or mouse positions
-        xMean = mean(xPositions);
-        yMean = mean(yPositions);
-        scatter(xMean, yMean,'xb');
-        axis([0 1440 0 900]);
-        set(gca,'YDir','rev');
-        pause(0.001);  % this pause allows Matlab to escape the main thread long enough to plot data
-        
-        
-        
-        EyeFixPosition = fixPosition + add_to_fix_pos*[-1 -1 1 1];
-        if ( IsBounded(xMean, yMean, EyeFixPosition) )
-            eyes_centered = 1;
-        end
-    
-    end
-    %}
     
      
     
@@ -1571,8 +1379,8 @@ while trial <= nrows;
     %                  BEGIN CHOICE RESPONSE
     %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-
+    
+    
        
     
     % WAIT FOR RESPONSE TO BE MADE, THEN DRAW CHOICE
@@ -1596,10 +1404,8 @@ while trial <= nrows;
         %i = i + 1;
         Screen('BlendFunction', window, GL_ONE, GL_ZERO);
         SCREEN( 'DrawTexture', window, tex_ChoiceStim, fullScreen, fullScreen); 
-
+        
         WaitSecs(.005); % wait 5 ms to keep processors from overloading
-
-
         
         % -----------------------------------------------------
         %               EYE/CURSOR POSITION CHECK
@@ -1619,8 +1425,6 @@ while trial <= nrows;
             yPositions(mod(sample, track_avg_pnts) + 1) = y;
             sample=sample+1;
         end
-        
-
         
         
         % -----------------------------------------------------
@@ -1655,15 +1459,12 @@ while trial <= nrows;
         end
         
         
-        
-        
         if ~ EYETRACKER
             
             eye_position = [xMean - 3, yMean - 3, xMean + 3, yMean + 3]; % circle of a 6px diamter
             SCREEN( 'FillOval', window, green, eye_position);
             
         end
-        
         
                 % -----------------------------------------------------
         %               GAMBEPAD CHECK
@@ -1798,16 +1599,16 @@ while trial <= nrows;
                     end
                     
                 end
-            end
+            end % if keyIsDown
             
         end % try keyboard
-
        
-
+       
+       
         % -----------------------------------------------------
         %               DRAW RED SELECTION FRAME
         % -----------------------------------------------------        
-
+       
         if (response ~= previousResponse) % only draw and flip if choice has changed to avoid flicker during tracking (cheap workaround)
             
             if (response == 1) % selected left
@@ -1841,18 +1642,10 @@ while trial <= nrows;
     end % while confirm == 0
     
     
-    
-    
     if EYETRACKER
         talk2tobii('EVENT','ChoiceOff', trial);
     end
     
-    
-    
-    
-    
-    
-   
     
     
     if (response == 0)
@@ -1903,7 +1696,6 @@ while trial <= nrows;
     WaitSecs(1);
     
     
-    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
     %                  DETERMINE CHOICE
@@ -1918,9 +1710,6 @@ while trial <= nrows;
     %
     %   RESPONSE
     %
-    
-    
-    
     
     
     if ( (response - 1) == topRight) % selected top (response: 1 = L, 2 = R; topRight: 0 = leftArrowForTop, 1 = rightArrowForTop)
@@ -1953,7 +1742,7 @@ while trial <= nrows;
                 gamb=2;
             end
             
-        end
+        end % if vert
         
     else % selected bottom
         
@@ -1984,9 +1773,9 @@ while trial <= nrows;
                 gamb=1;
             end
             
-        end
+        end % if vert
         
-    end
+    end % if response
     
     
      
@@ -2015,51 +1804,7 @@ while trial <= nrows;
     % display outcome for n sec
     WaitSecs(3);
     
-  %{  
-    % show outcome display until participant escapes
-    while KbCheck; end % Wait until all keys are released.
-    confirm = 0;
-    while (confirm == 0)      %(currentTime + 2 > GetSecs)
     
-            % -----------------------------------------------------
-        %               KEYBOARD CHECK
-        % -----------------------------------------------------
-        
-        
-        try % KEYBOARD ENTRY
-            [keyIsDown, secs, keyCode] = KbCheck;
-            if keyIsDown
-                if  (find(keyCode) == up_key) || (find(keyCode) == return_key) || (find(keyCode) == space_key) %they chose up, space, or return
-                    % FLIP TO CHOSEN BET DISPLAY
-                    confirm=1;
-                    endOutcomeTime = GetSecs-startTime;
-                end
-            end
-        end % try key is down
-        
-        
-        % -----------------------------------------------------
-        %               GAMBEPAD CHECK
-        % -----------------------------------------------------        
-        
-        if USINGGAMEPAD
-            if Gamepad('GetButton', gamepadIndex, two_jst) == 1
-                confirm=1;
-                endOutcomeTime = GetSecs - startTime;
-            end
-        end
-    
-    end
-    
-    %}
-    
-    
-    
-    
-    
-    
-
-        
     if (playing == 1)
         PsychPortAudio('Stop', winAudio, 1);
     end
@@ -2184,45 +1929,6 @@ end % END TRIAL LOOP
 %
 % ================================================================
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-% FINAL WINNINGS DISPLAY
-%        WinningsDisplay = SCREEN('OpenOffSCREENwindow', window, black, fullScreen);
-%        winnings = total_winnings; 
-%        DrawWinnings; % function to draw the image 'currentimage'
-%         tex5 = SCREEN( 'MakeTexture', window, winImage );
-%         SCREEN( 'DrawTexture', WinningsDisplay, tex5, [], winningsBottom);
-%         SCREEN('FrameRect', WinningsDisplay, brown, winningsBox, 2*lineWidth);
-%         SCREEN('CopyWindow', WinningsDisplay, window, fullScreen, fullScreen);
-%         
-%         SCREEN('Flip', window);
-%         
-%         
-%         while KbCheck; end % Wait until all keys are released.
-%         response = 0;
-%         while (response == 0)
-%             
-%             [keyIsDown, secs, keyCode] = KbCheck;
-%             if keyIsDown
-%                 if (find(keyCode) == h_key) || (find(keyCode) == up_key) || (find(keyCode) == right_key)  %press h or up arrow to break
-%                     response = 1;
-%                 end
-%             end
-%             
-%             if USINGGAMEPAD
-%                 if Gamepad('GetButton', gamepadIndex, two_jst) == 1
-%                     response = 1;
-%                 end
-%             end
-%             
-%         end % while response == 0
-
-
-
-
-
-
-
 
 
 
