@@ -13,8 +13,10 @@ if (file.exists(study_dir[1])) {
 } else {
 	return('study directory not found')
 }
-
 setwd(paste(c(study_dir, '/scripts/'   ), collapse=""))
+
+
+library(reshape)
 source(paste(c(study_dir, '/scripts/functions/is_bounded.R'   ), collapse=""))
 source(paste(c(study_dir, '/scripts/functions/positions.R'   ), collapse=""))
 source(paste(c(study_dir, '/scripts/functions/seek_time_line.R'   ), collapse=""))
@@ -22,33 +24,28 @@ source(paste(c(study_dir, '/scripts/functions/tally_counts.R'   ), collapse=""))
 source(paste(c(study_dir, '/scripts/functions/reject_outliers.R'   ), collapse=""))
 source(paste(c(study_dir, '/scripts/functions/eye_data_correction.R'   ), collapse=""))
 
-
-library(reshape)
-
-
+# NUMBER OF SD BEYOND WHICH OUTLIERS ARE IDENTIFIED
 outlier_sd <- 3
 
+# SCREEN DIMENSIONS
 xdim <- 1280
 ydim <- 1024
 
+
+
+# ASSEMBLE DATA FILE NAME STRINGS
 data_path <- paste(c(study_dir, '/data/raw_data/'   ), collapse="")
-
-
-
-# assemble data file name strings
 beh_data_file_name <- paste(c(data_path, "risk_reinf_", subjectID, "_test_GL.txt"), sep="", collapse="")
 eye_data_file_name <- paste(c(data_path, "Eye_tracking_", subjectID, "_GL.txt"), sep="", collapse="")
 event_data_file_name <- paste(c(data_path, "Eye_events_", subjectID, "_GL.txt"), sep="", collapse="")
 
-eye_data_header <- read.table(paste(c(study_dir, "/data/tobii_output_header.txt"), collapse=""), header=T)
-# load data
 
+# LOAD DATA
 beh_data <- read.table(beh_data_file_name, header=T)
 beh_data$subjectID <- subjectID
-
+eye_data_header <- read.table(paste(c(study_dir, "/data/tobii_output_header.txt"), collapse=""), header=T)
 eye_data <- read.table(eye_data_file_name, header=F)
 names(eye_data) <- names(eye_data_header)
-
 event_data <- read.table(event_data_file_name, skip=2, col.names=c("event","time","trial"))
 
 # WHEN SUBJECTS DO NOT RECALIBRATE, RECALIBRATION TIME MARKERS ARE NOT INCLUDED, SO WE NEED TO ADD THEM SEPARATELY HERE AS NA
@@ -57,15 +54,14 @@ if (! is.element("Recalibration_on", event_data$event)) {
 	event_data <- rbind(event_data, c("Recalibration_on", 0, 1))
 	event_data <- rbind(event_data, c("Recalibration_off", 0, 1))
 }
-# this is needed for seek_time_line to work
+# EVENT, TRIAL, AND TIME VALUES ARE CLASS-SPECIFIC FOR SEEK_TIME_LINE
 event_data$event <- as.factor(event_data$event)
 event_data$trial <- as.factor(as.numeric(event_data$trial))
 event_data$time <- as.numeric(event_data$time)
 
-event_data.table <- recast(event_data, trial ~ event, id.var=c("event","trial"))
+event_data.table <- recast(event_data, trial ~ event, id.var=c("event","trial")) # RESHAPE DATA
 
-
-
+# BRING TOGETHER BEHAVIORAL DATA AND EVENT DATA
 beh_data <- merge(beh_data, event_data.table)
 
 beh_data$outlier <- reject_outliers(beh_data$RT, outlier_sd)*1
@@ -191,8 +187,7 @@ eye_data$exclude <- 0
 eye_data$replaced_L <- FALSE
 eye_data$replaced_R <- FALSE
 
-
-# initialize output dataframe objects
+# INITIALIZE OUTPUT DATAFRAME OBJECTS
 delay_pupil <- data.frame()
 outcome_pupil <- data.frame()
 iti_pupil <- data.frame()
@@ -201,13 +196,13 @@ decision_pupil <- data.frame()
 decicion_pupil_full_L <- list()
 decicion_pupil_full_R <- list()
 
-
+# BEGIN LOOPING THROUGH TRIALS
 for (i in 1:nrow(beh_data)) {
 	
 	
 	#################################################################################
 	#################################################################################
-	# find onset and offset times
+	# FIND ONSET AND OFFSET TIMES
 	
 	current_trial_onset.decision <- seek_time_line(beh_data$TrialOnset[i], eye_data$tet_timeStamp)
 	current_trial_offset.decision <- seek_time_line(beh_data$Decision[i], eye_data$tet_timeStamp)
@@ -260,14 +255,12 @@ for (i in 1:nrow(beh_data)) {
 	#################################################################################		
 	# INTERPOLATE MISSING DATA POINTS
 	corrected_data <- eye_data_correction(eye_data, beh_data$trial[i])
-	
 
 	# CALCULATE NEW GAZEPOINTS BASED ON CORRECTED DATA: scale * ((T or F)*fixation + (T or F)*fixation)) / max(1 or 2) 
 	corrected_data$GazepointX <- xdim * ( (corrected_data$left_x != -1)*corrected_data$left_x  + (corrected_data$right_x != -1)*corrected_data$right_x) /
 		apply( data.frame( ( corrected_data$left_x != -1 ) + ( corrected_data$right_x != -1 ) ), 1, function(x) { max(x,1)})
 	corrected_data$GazepointY <- ydim * ( (corrected_data$left_y != -1)*corrected_data$left_y  + (corrected_data$right_y != -1)*corrected_data$right_y) /
 		apply( data.frame( ( corrected_data$left_y != -1 ) + ( corrected_data$right_y != -1 ) ), 1, function(x) { max(x,1)})
-	
 	
 	# PLOTTING OF MISSING AND INTERPOLATED DATA SHOULD GO HERE, WHILE BOTH OLD AND NEW GAZEPOINTS ARE IN MEMORY: DEBUG
 	# par(mfrow=c(2,1))
@@ -283,10 +276,8 @@ for (i in 1:nrow(beh_data)) {
 	# lines(1:length(corrected_data$GazepointY), 100*(corrected_data$epoch == "choice"), col="orange", lwd=2)
 	# lines(1:length(corrected_data$GazepointY), 100*(corrected_data$epoch == "outcome"), col="red", lwd=2)	
 	
-	
 	# reassign corrected data to eye_data
 	eye_data[current_trial_onset.decision:current_trial_offset.outcome,] <- corrected_data	
-	
 	
 	# MISSING DATA POINTS SUMMARY
 	beh_data$left_rep_decision[i] <- round(sum(eye_data$replaced_L[current_trial_onset.decision:current_trial_offset.decision]) / 
@@ -476,9 +467,7 @@ for (i in 1:nrow(beh_data)) {
 	
 	#################################################################################
 	#################################################################################
-	# identify first and last fixation objects
-	
-
+	# IDENTIFY FIRST AND LAST FIXATION OBJECTS
 	
 	for (j in current_trial_onset.decision:current_trial_offset.decision) {
 			# loop through eye_data fixation colums until the first fixation appears, then identify and stop looping
@@ -536,6 +525,7 @@ for (i in 1:nrow(beh_data)) {
 	#################################################################################
 	#################################################################################
 	# ADD LFO AND FFO TO EYE DATA
+	
 	eye_data$ffo[current_trial_onset.decision:current_trial_offset.decision] <- beh_data$ffo.decision[i]
 	eye_data$lfo[current_trial_onset.decision:current_trial_offset.decision] <- beh_data$lfo.decision[i]
 
@@ -544,8 +534,6 @@ for (i in 1:nrow(beh_data)) {
 
 	eye_data$ffo[current_trial_onset.outcome:current_trial_offset.outcome] <- beh_data$ffo.outcome[i]
 	eye_data$lfo[current_trial_onset.outcome:current_trial_offset.outcome] <- beh_data$lfo.outcome[i]
-
-
 	
 	
 	#################################################################################

@@ -1,10 +1,17 @@
+# RETURNS LIST OF LENGTH 2:
+	# [[1]] VECTOR OF ITEMS AS THEY APPEAR (OUTPUT CONTAINS NO ITEMS APPEARING BESIDE ANOTHER OF THE SAME VALUE)
+	# [[2]] COUNTS OF ITEMS AS THEY APPEAR (I.E. NUMBER OF REPETITIONS)
+# cut_repeats(c(1,1,1,1,2,3,3,3,2,2,2,1,2,3,4,4,4,5))
+	# [[1]]
+	# [1] 1 2 3 2 1 2 3 4 5
+
+	# [[2]]
+	# [1] 4 1 3 3 1 1 1 3 1
 
 # values in the exclude array will be cut and not counted.
-# returns 
+
 cut_repeats <- function(array, exclude=c()) {
-	# RETURNS LIST OF LENGTH 2:
-		# [[1]] VECTOR OF ITEMS AS THEY APPEAR, WITHOUT IMMEDIATE REPETITION
-		# [[2]] COUNTS OF ITEMS AS THEY APPEAR (I.E. NUMBER OF REPETITIONS)
+
 	j = 1
 	for (j in 1:length(array)) {
 		if	(is.element(array[j], exclude)) {
