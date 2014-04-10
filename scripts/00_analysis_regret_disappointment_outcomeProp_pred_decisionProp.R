@@ -31,10 +31,6 @@ current_model_df <- ddply(current_model_df, .(subjectID), transform,
 current_model_df <- ddply(current_model_df, .(subjectID), transform, 
 	sure2_shifted.outcome =(c(0,sure2_prop.outcome[1:length(sure2_prop.outcome)-1])))
 
-do.call("rbind", as.list(
-  by(current_model_df, current_model_df["subjectID"], cor(mag1_shifted.outcome, mag1_prop.decision))
-))
-
 
 
 # RUN STATISTICS
@@ -43,7 +39,14 @@ do.call("rbind", as.list(
 cor.test(current_model_df$mag1_shifted.outcome, current_model_df$mag1_prop.decision)
 
 # CORRELATION BY SUBJECTID
-ddply(current_model_df, .(subjectID), cor.test(mag1_shifted.outcome, mag1_prop.decision))
+ddply(current_model_df, .(subjectID), function(x) { 
+	cor.test(x[,"mag1_shifted.outcome"], x[,"mag1_prop.decision"])$estimate
+	})
+
+# ALL VARIABLES OF CORRELATION TEST BY SUBJECTID
+do.call("rbind", as.list(
+  by(current_model_df, current_model_df["subjectID"], function(x) {cor.test(x$mag1_shifted.outcome, x$mag1_prop.decision)})
+))
 
 # GET CORRELATION PVALUES AND ESTIMATES BETWEEN MAG1 LOOKING TIMES AT CHOICE AND AT PRIOR OUTCOME
 # SPLIT TURNS dataframe into list according to 

@@ -24,37 +24,6 @@ text_sizing <- 	theme(axis.text.x = element_text(size=6),
 		title = element_text(size=12)) 
 
 
-##############################################################################
-##############################################################################
-#								CHECKING CONVERGENCE
-sink("~/Documents/Academics/Projects/EyeTrackingGaze2/analysis/_analysis_emot/_convergence.txt", append=F)
-for (model in c(1, 2, 3)) {
-for	(decay_type in c(0, 1, 2, 3)) {
-for (domain in c("Gain","Loss")) {
-
-	if (model == 1 & decay_type == 3) {
-		next
-	}
-
-	out_file_data_name <- paste(c("../analysis/_analysis_emot/model", 
-		model, "_", domain,"_decayType", decay_type, "_data.R"), sep="", collapse="")
-	load(out_file_data_name) # current_model_df
-	
-
-	if (sum(current_model_df$convergence > 0) > 0) {
-		cat(paste(c("\nmodel=", model, "\ndecay_type=", decay_type, "\ndomain=\"", domain, "\"\n"),sep="",collapse=""))
-		print(unique(current_model_df[,c("subjectID","convergence")]))
-	} else {
-		cat(paste(c("\nmodel=", model, "\ndecay_type=", decay_type, "\ndomain=\"", domain, "\"\nGOOD\n"),sep="",collapse=""))
-	}
-
-} # for domain
-} # for decay_type
-} # for model
-
-sink()
-
-
 
 
 ##############################################################################

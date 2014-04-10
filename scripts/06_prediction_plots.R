@@ -109,9 +109,9 @@ legend(0.0, 0.28,
 	col=c('green3','blue','black'))
 
 
-text(0.32, 0.75, "30% increase", cex=legend_cex, col="black")
-text(0.6, 0.55, "12% decrease", cex=legend_cex, col="black")
-text(0.83, 0.395, "26% decrease", cex=legend_cex, col="black")
+text(0.32, 0.78, "24% increase", cex=legend_cex, col="black")
+text(0.6, 0.6, "12% decrease", cex=legend_cex, col="black")
+text(0.83, 0.44, "31% decrease", cex=legend_cex, col="black")
 
 
 # CALCULATE DIFFERENCE IN PROBABILITY OF GAMBLING DUE TO EMOTION

@@ -10,7 +10,7 @@ source("./subject_lists.R")
 
 # SPECIFY STUDY DIRECTORY
 study_dir <- c("/Users/Shared/EyeTrackingGaze", 
-	"/Users/dpaulsen/Documents/Academics/Projects/EyeTrackingGaze")
+	"/Users/dpaulsen/Documents/Academics/Projects/EyeTrackingGaze2")
 if (file.exists(study_dir[1])) { 
 	study_dir <- study_dir[1] 
 } else if (file.exists(study_dir[2])) { 
@@ -38,15 +38,12 @@ for (subj in all_subjects) {
  	fileName <- paste(c(processed_data_dir, "eye_data_", subj, ".R"), collapse="" )
  	load(fileName)
 
- 	fileName <- paste(c(processed_data_dir, "pupil_data_", subj, "outcome.R"), collapse="" )
+ 	fileName <- paste(c(processed_data_dir, "pupil_data_", subj, "_outcome.R"), collapse="" )
  	load(fileName)
 
 	eye_data$left_pup_diam[eye_data$left_pup_diam == -1] <- NaN # replace Inf with NaN
 	eye_data$right_pup_diam[eye_data$right_pup_diam == -1] <- NaN # replace Inf with NaN
  	
-	for (trialNum in 1:nrow(beh_data)) {
-		print(trialNum)
-	} 	
  	
  	# REPLACE BAD VALUES
 	temp <- outcome_pupil[,13:253]
@@ -63,14 +60,27 @@ for (subj in all_subjects) {
 			outcome_pupil[i,13:253] <- t(na.approx(t(outcome_pupil[i,13:253]), maxgap=10, na.rm=FALSE))
 		} 
 	}
- 	cmbd_outcome_pupil[[1]] <- rbind(cmbd_outcome_pupil[[1]], outcome_pupil) # add to list
+	
+	# ON FIRST PASS - SET LIST ENTRY TO DATAFRAME RATHER THAN BINDING
+	if (length(cmbd_outcome_pupil) < 3) {	
+ 		cmbd_outcome_pupil[[1]] <- rbind(outcome_pupil) # add to list
+ 	} else {
+ 		cmbd_outcome_pupil[[1]] <- rbind(cmbd_outcome_pupil[[1]], outcome_pupil) # add to list
+ 	}
 
 	# GENERATE NORMALIZED PUPIL DIAMETERS cmbd_outcome_pupil[[2]]
 	temp.norm <- outcome_pupil
 	pup.mean <- mean(as.numeric(as.matrix(temp.norm[,13:253])), na.rm = T) # calculate mean pupil dilation
 	pup.sd <- sd(as.numeric(as.matrix(temp.norm[,13:253])), na.rm = T) # calculate stand. dev. pupil dilation
 	temp.norm[,13:253] <- (temp.norm[,13:253] - pup.mean) / pup.sd  # normalize all pupil dilations
- 	cmbd_outcome_pupil[[2]] <- rbind(cmbd_outcome_pupil[[2]], temp.norm) # add to list
+ 	
+	# ON FIRST PASS - SET LIST ENTRY TO DATAFRAME RATHER THAN BINDING
+	if (length(cmbd_outcome_pupil) < 3) {	
+ 		cmbd_outcome_pupil[[2]] <- rbind(temp.norm) # add to list
+ 	} else {
+ 		cmbd_outcome_pupil[[2]] <- rbind(cmbd_outcome_pupil[[2]], temp.norm) # add to list
+ 	}
+ 	
 
 	#	GENERAL TABLE OF TRIAL COUNTS
 	outcome_pupil.nacount <- aggregate(outcome_pupil[,13:253],
@@ -80,7 +90,15 @@ for (subj in all_subjects) {
 	outcome_pupil.trialCount <- outcome_pupil.count[,4:ncol(outcome_pupil.count)] - outcome_pupil.nacount[,4:ncol(outcome_pupil.nacount)]
 	outcome_pupil.trialCount <- cbind(outcome_pupil$subjectID[1], outcome_pupil.count[,1:3], outcome_pupil.trialCount)
 	names(outcome_pupil.trialCount)[1:4] <- c("subjectID","eye", "outcome", "condition")
-	cmbd_outcome_pupil[[3]] <- rbind(cmbd_outcome_pupil[[3]], outcome_pupil.trialCount) # add to list
+
+
+	# ON FIRST PASS - SET LIST ENTRY TO DATAFRAME RATHER THAN BINDING
+	if (length(cmbd_outcome_pupil) < 3) {	
+ 		cmbd_outcome_pupil[[3]] <- rbind(outcome_pupil.trialCount) # add to list
+ 	} else {
+ 		cmbd_outcome_pupil[[3]] <- rbind(cmbd_outcome_pupil[[3]], outcome_pupil.trialCount) # add to list
+ 	}
+
  	
  }
 
